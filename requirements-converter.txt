@@ -1,0 +1,4 @@
+# get_flattened_data requires Pillow 12.1+:
+# https://pillow.readthedocs.io/en/stable/releasenotes/12.1.0.html
+Pillow>=12.1,<13
+numpy>=2,<3
