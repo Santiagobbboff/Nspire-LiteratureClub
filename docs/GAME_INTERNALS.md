@@ -238,7 +238,7 @@ The following are **not separately serialized**: exact typewriter progress, poem
 
 ### Compatibility and failure handling
 
-Current DDLC saves accept **DDS only**. DDS stands for Doki Doki Save, with no numeric suffix. Earlier DDLC development formats (including NZS7) are not accepted or imported, as the owner confirmed no existing saves need migration. The generic non-poem engine retains its separate NZS2/NZS3 readers; that does not make them valid for this DDLC pack. The bundled upstream nZATO source accepts NZSV, which also cannot be mistaken for DDS.
+Current DDLC saves accept **DDS only**. DDS stands for Doki Doki Save, with no numeric suffix. The bundled upstream nZATO source accepts NZSV, which also cannot be mistaken for DDS.
 
 The latest ending/route corrections preserve existing event/choice positions; the DDS change retains the previous payload layout but uses a new identifier and filenames. Future source edits that insert/reorder events can invalidate cursor and menu indices even when state slots are unchanged. The file has no content-pack hash, checksum or automatic event-index migration; change the identifier or provide a deliberate migration when needed.
 
