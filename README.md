@@ -78,6 +78,7 @@ DDLC saves use `ddlc-0.sav.tns` through `ddlc-23.sav.tns`; settings use
 folder.
 
 Remember that esc opens the menu!
+
 See [GAME_INTERNALS.md](docs/GAME_INTERNALS.md) for replay and compatibility.
 
 ## Future Goals and issues
