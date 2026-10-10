@@ -82,4 +82,3 @@ bindings or renderer cleanup. Saves reconstruct playback from a cursor, decision
 random seed and story-state snapshot. Renumbering events may invalidate saves even
 without changing the save version. Current capacity: 32,768 events; 31,712 used.
 
-See [RELEASING.md](RELEASING.md) for the source/launcher publication procedure.
