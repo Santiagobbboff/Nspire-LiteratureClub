@@ -36,6 +36,6 @@ The completed gameplay/ending baseline were confirmed on a real
 calculator. The latest native WSL launcher build succeeded;
 the launcher is 319,299 bytes. A fresh Windows pack conversion also succeeded.
 
-See [README](../README.md) for installation, [DEVELOPMENT](DEVELOPMENT.md) for builds,
-[RELEASING](RELEASING.md) for GitHub packaging and [GAME_INTERNALS](GAME_INTERNALS.md)
+See [README](../README.md) for installation, [DEVELOPMENT](DEVELOPMENT.md) for builds
+and [GAME_INTERNALS](GAME_INTERNALS.md)
 for state/save details.
