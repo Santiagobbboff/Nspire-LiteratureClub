@@ -77,15 +77,20 @@ DDLC saves use `ddlc-0.sav.tns` through `ddlc-23.sav.tns`; settings use
 `ddlc.sav.tns`. These are separate from nZATO's files, so both games can share a 
 folder.
 
+Remember that esc opens the menu!
 See [GAME_INTERNALS.md](docs/GAME_INTERNALS.md) for replay and compatibility.
 
 ## Future Goals and issues
-Port the rest of the game
+Port the rest of the game 
+ 
 Add animations and transitions
-Game sometimes lags when fast forwarding
-Saves may be a bit wonky
+ 
+Game sometimes lags when fast forwarding 
 
-you tell me!
+Saves may be a bit wonky 
+
+  
+you tell me! 
 
 ## Build and contribute
 
