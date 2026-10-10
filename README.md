@@ -2,7 +2,7 @@
 <img width="320" height="240" alt="sayori-overslept" src="https://github.com/user-attachments/assets/be537136-8e8d-4084-9182-f8a762f5c1dd" />
 <img width="640" height="480" alt="image 1" src="https://github.com/user-attachments/assets/66c9480a-3463-4c91-aa9a-d5a0e9af8250" />
 
-# DDLC TI-Nspire — unofficial Act 1 port
+# Nspire Literature Club 
 
 An unofficial port of DDLC Act 1 for the **TI-Nspire CX II with Ndless**.
 Not affiliated with or endorsed by Team Salvato. Please play the original game first:
