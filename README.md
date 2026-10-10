@@ -32,8 +32,8 @@ py -3 tools/make_ddlc_pack.py "C:\Games\DDLC"
 ```
 
 Or use `make-pack.cmd "C:\Games\DDLC"` after installing the dependencies.
-Replace `C:\Games\DDLC` with your game folder
-Content pack will appear in a folder called dist inside the project's directory
+Replace `C:\Games\DDLC` with your game folder.  
+Content pack will be in a folder called dist inside the project's directory.
 ### Linux
 
 ```sh
