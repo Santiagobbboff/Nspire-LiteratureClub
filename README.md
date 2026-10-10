@@ -60,7 +60,7 @@ extracted files, converted art, a readable event script and a conversion report.
 JSON, saves or work folders.** The release source includes no original game archives,
 image files, font files or copied narrative dialogue. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-## Install on the calculator
+## Installing on the calculator
 
 Download `ddlc.tns` from this repository's **Releases** section. The source-code
 download does not include the prebuilt launcher. Generate a pack using the
@@ -96,13 +96,16 @@ preview and project structure. The SDK/toolchain is needed only to build the lau
 poem scoring, resource metadata, save replay and ending behavior.
 See [RELEASING.md](docs/RELEASING.md) for publishing the source and launcher.
 
-## Credits and licensing
+## Credits, licensing & disclaimer
 
 Original DDLC by **Team Salvato**. Runtime/converter derived from **nZATO by zyf722**
 (GPLv3). Script reader, image resolver and transform reader from
 **ddlc-ti84plusce by koboshchan** (MIT).
 Video decoder from **Nspire-VideoPlayer-Ndless by GigaZelensky** and **Xvid**; retained
-component licenses apply. Port by **Santiagobbboff and chatgpt-san**.
-
+component licenses apply. Port by **Santiagobbboff**.
 See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 Original game content is separate from the engine license. 
+
+This project was heavily developed through vibe coding but has been tested from start to finish. The code may not have received a full human review so I can't guarantee perfection,
+or that everything works in any scenario. By using any content or build artifact from this project, you acknowledge and accept the associated risks.
+
