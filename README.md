@@ -98,11 +98,15 @@ poem scoring, resource metadata, save replay and ending behavior.
 ## Credits, licensing & disclaimer
 
 Original DDLC by **Team Salvato**. 
+
 Runtime/converter derived from **nZATO by zyf722**(GPLv3). 
+
 Script reader, image resolver and transform reader from **ddlc-ti84plusce by koboshchan** (MIT).
-Video decoder from **Nspire-VideoPlayer-Ndless by GigaZelensky** and **Xvid**;
-retainedcomponent licenses apply. 
+
+Video decoder from **Nspire-VideoPlayer-Ndless by GigaZelensky** and **Xvid**. 
+
 Port by **Santiagobbboff**(me!).
+
 See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 Original game content is separate from the engine license. 
 
