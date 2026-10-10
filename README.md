@@ -5,7 +5,7 @@
 # Nspire Literature Club 
 
 An unofficial port of DDLC Act 1 for the **TI-Nspire CX II with Ndless**.
-Not affiliated with or endorsed by Team Salvato. Please play the original game first:
+Not affiliated with or endorsed by Team Salvato. Please play the original game first!
 [ddlc.moe](https://ddlc.moe).
 
 Full Act 1 (days 1-6) is playable and content complete, including route-dependent CGs,
@@ -15,9 +15,9 @@ This version doesn't include any external game mechanics like character deletion
 
 ## How to Generate a Content Pack
 
-Only the launcher is provided, to play you need to generate a contente pack first!
+Only the launcher is provided, to play you need to generate a content pack first!
 Provide an **unmodified original DDLC PC installation**, extracted from its
-download. Steam and Itch.io were tested. DDLC Plus is not currently supported. 
+download. Steam and Itch.io both work. DDLC Plus is not currently supported. 
 The converter only reads your local installation;
 it does not alter the game files.
 
