@@ -94,7 +94,6 @@ preview and project structure. The SDK/toolchain is needed only to build the lau
 [PORT_STATUS.md](docs/PORT_STATUS.md) records implemented scope and build limitations.
 [GAME_INTERNALS.md](docs/GAME_INTERNALS.md) documents all story-state slots, choices,
 poem scoring, resource metadata, save replay and ending behavior.
-See [RELEASING.md](docs/RELEASING.md) for publishing the source and launcher.
 
 ## Credits, licensing & disclaimer
 
@@ -107,5 +106,5 @@ See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 Original game content is separate from the engine license. 
 
 This project was heavily developed through vibe coding but has been tested from start to finish. The code may not have received a full human review so I can't guarantee perfection,
-or that everything works in any scenario. By using any content or build artifact from this project, you acknowledge and accept the associated risks.
+or that everything works in every scenario. By using any content or build artifact from this project, you acknowledge and accept the associated risks.
 
