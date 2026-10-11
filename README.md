@@ -94,10 +94,6 @@ Just put the .exe file next to your content pack, and launch the game!
 Port the rest of the game 
  
 Add animations and transitions
- 
-Game sometimes lags when fast forwarding 
-
-Saves may be a bit wonky 
 
   
 you tell me! 
@@ -115,13 +111,13 @@ poem scoring, resource metadata, save replay and ending behavior.
 
 Original DDLC by **Team Salvato**. 
 
-Runtime/converter derived from **nZATO by zyf722**(GPLv3). 
+Runtime/converter derived from **[nZATO](https://github.com/zyf722/nZATO) by zyf722**(GPLv3). 
 
-Script reader, image resolver and transform reader from **ddlc-ti84plusce by koboshchan** (MIT).
+Script reader, image resolver and transform reader from **[ddlc-ti84plusce](https://github.com/koboshchan/ddlc-ti84plusce) by koboshchan** (MIT).
 
 Video decoder based on **Xvid**, with the original TI-Nspire adaptation from
-**[nvid2 by giraf-fe](https://github.com/giraf-fe/nvid2)** (GPL-2.0-or-later),
-incorporated through **[Nspire-VideoPlayer-Ndless by GigaZelensky](https://github.com/GigaZelensky/Nspire-VideoPlayer-Ndless)** and nZATO.
+**[nvid2](https://github.com/giraf-fe/nvid2) by giraf-fe** (GPL-2.0-or-later),
+incorporated through **[Nspire-VideoPlayer-Ndless](https://github.com/GigaZelensky/Nspire-VideoPlayer-Ndless) by GigaZelensky** and nZATO.
 
 Port by **Santiagobbboff**(me!).
 
