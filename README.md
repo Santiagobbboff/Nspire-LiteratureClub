@@ -119,7 +119,9 @@ Runtime/converter derived from **nZATO by zyf722**(GPLv3).
 
 Script reader, image resolver and transform reader from **ddlc-ti84plusce by koboshchan** (MIT).
 
-Video decoder from **Nspire-VideoPlayer-Ndless by GigaZelensky** and **Xvid**. 
+Video decoder based on **Xvid**, with the original TI-Nspire adaptation from
+**[nvid2 by giraf-fe](https://github.com/giraf-fe/nvid2)** (GPL-2.0-or-later),
+incorporated through **[Nspire-VideoPlayer-Ndless by GigaZelensky](https://github.com/GigaZelensky/Nspire-VideoPlayer-Ndless)** and nZATO.
 
 Port by **Santiagobbboff**(me!).
 
@@ -128,4 +130,3 @@ Original game content is separate from the engine license.
 
 This project was heavily developed through vibe coding but has been tested from start to finish. The code may not have received a full human review so I can't guarantee perfection,
 or that everything works in every scenario. By using any content or build artifact from this project, you acknowledge and accept the associated risks.
-

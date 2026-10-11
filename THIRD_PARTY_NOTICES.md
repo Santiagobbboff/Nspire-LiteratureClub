@@ -24,9 +24,26 @@ Its MIT-licensed tools are incorporated as follows:
 Full copyright/permission notice and upstream disclaimer:
 `licenses/ddlc-ti84plusce-LICENSE.txt`.
 
+## nvid2
+
+Original TI-Nspire Xvid/MPEG-4 Part 2 decoder adaptation:
+**giraf-fe**, <https://github.com/giraf-fe/nvid2>.
+
+nvid2 is licensed under GNU GPL version 2 or, at your option, any later version
+(GPL-2.0-or-later). Its adapted decoder reached this port through
+Nspire-VideoPlayer-Ndless and nZATO. The provenance is documented in nZATO's
+`docs/architecture.md` and `docs/opening-video.md`.
+
+The shared GPLv2 license text supplied with nZATO's release is retained at
+`licenses/Xvid-and-nvid2.txt`. Existing Xvid copyright/license headers remain
+beside the vendored source. This attribution supplements the intermediate
+project's notice below.
+
 ## Nspire-VideoPlayer-Ndless
 
-Decoder source by **GigaZelensky**. Its retained GPLv3 notice is at
+Intermediate video-player/NVP implementation by **GigaZelensky**,
+<https://github.com/GigaZelensky/Nspire-VideoPlayer-Ndless>.
+Its retained GPLv3 notice is at
 `cpp/third_party/nvp/LICENSE-Nspire-VideoPlayer-Ndless`. Decoder files and the
 vendored Xvid sources remain available with their original notices.
 
@@ -34,7 +51,7 @@ vendored Xvid sources remain available with their original notices.
 
 Xvid authors are identified in each retained source header. The headers license
 the relevant sources under GNU GPL version 2 or later. The supplied license text
-is retained in `cpp/third_party/nvp/xvid/LICENSE`. Keep the individual file notices.
+is retained in `cpp/third_party/nvp/xvid/LICENSE`.
 
 ## Original DDLC
 
