@@ -61,7 +61,7 @@ extracted files, converted art, a readable event script and a conversion report.
 JSON, saves or work folders.** The release source includes no original game archives,
 image files, font files or copied narrative dialogue. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-## Installing on the calculator
+## Installing on the calculator and playing the game
 
 Download `ddlc.tns` from this repository's **Releases** section. The source-code
 download does not include the prebuilt launcher. Generate a pack using the
@@ -79,7 +79,16 @@ folder.
 
 Remember that esc opens the menu!
 
+Alternatevely, you can use the desktop preview app to play the game through your pc.
+
 See [GAME_INTERNALS.md](docs/GAME_INTERNALS.md) for replay and compatibility.
+
+## Using the desktop preview app
+
+If you don't have a TI Nspire CX to play the game, you can download the desktop preview app in the /dist/windows folder
+or compile it yourself from /tools/desktop-preview/ to play it through a Windows PC.
+
+Just put the .exe file next to your content pack, and launch the game!
 
 ## Future Goals and issues
 Port the rest of the game 
