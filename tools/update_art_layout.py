@@ -16,6 +16,14 @@ LAYOUT = PROJECT / "config/ddlc_art_layout.json"
 def main() -> int:
     fresh = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     layout = json.loads(LAYOUT.read_text(encoding="utf-8"))
+    # Rows added for Act 2+ may be dropped or change kind between bakes; Act 1
+    # rows (no introduced_act) are never touched.
+    fresh_kinds = {tuple(row["image"]): row["kind"] for row in fresh["resources"]}
+    pruned = [row for row in layout["resources"]
+              if not row.get("introduced_act")
+              or fresh_kinds.get(tuple(row["image"])) == row["kind"]]
+    removed = len(layout["resources"]) - len(pruned)
+    layout["resources"] = pruned
     by_image = {tuple(row["image"]): row for row in layout["resources"]}
     # Fresh atom id -> existing atom name, learned from rows present in both.
     atom_names: dict[int, dict] = {}
@@ -63,7 +71,7 @@ def main() -> int:
         added += 1
     layout["variants"] = fresh.get("variants", {})
     LAYOUT.write_text(json.dumps(layout, indent=2), encoding="utf-8")
-    print(f"layout now has {len(layout['resources'])} resources ({added} added)")
+    print(f"layout now has {len(layout['resources'])} resources ({added} added, {removed} removed)")
     return 0
 
 

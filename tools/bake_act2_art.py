@@ -36,12 +36,23 @@ ACT2_LABELS: dict[str, set[str] | None] = {
     "script-exclusives2-natsuki.rpyc": None,
     "script-exclusives2-yuri.rpyc": None,
     "poems_special.rpyc": None,
+    "script-ch30.rpyc": None,
+    "script-ch40.rpyc": None,
+}
+# Act 3 room: the window layers, the room and its highlight flattened into one background.
+COMPOSITES = {
+    ("monika_bg",): ("images/cg/monika/mask_3.png", "images/cg/monika/mask_2.png",
+                     "images/cg/monika/monika_bg.png", "images/cg/monika/monika_bg_highlight.png"),
+    ("monika_room",): ("images/cg/monika/mask_3.png", "images/cg/monika/mask_2.png",
+                       "images/cg/monika/monika_room.png", "images/cg/monika/monika_room_highlight.png"),
 }
 # Response wrappers reused from Act 1 and poems shown with an `img=` pose.
 EXTRA_SPRITES = {("yuri", "2s"), ("natsuki", "1c"), ("yuri", "1a"), ("monika", "1a"), ("yuri_half2",)}
 # Overlay tags that are not pictures: bare character tags (repositions) and
 # the runtime text overlay used for `splash_warning`.
-SKIP_OVERLAYS = {("monika",), ("natsuki",), ("yuri",), ("sayori",), ("yuri_half2",)}
+SKIP_OVERLAYS = {("monika",), ("natsuki",), ("yuri",), ("sayori",), ("yuri_half2",),
+                 ("mask_2",), ("mask_3",), ("room_mask",), ("room_mask2",), ("m_rectstatic",),
+                 ("m_rectstatic2",), ("m_rectstatic3",), ("glitch_color",), ("glitch_color2",)}
 EXTRA_OVERLAYS = {("yuri", "eyes"), ("bg", "eyes")}
 
 # Semi-transparent solids: (r, g, b, a). Ren'Py's own definitions carry the
@@ -64,7 +75,7 @@ PLACED = {
     ("noface2",): (0.95, 0.47, 0.95, 0.47, 1.0),
 }
 # Full-screen pictures that replace the stage (shown with `scene` by the compiler).
-FULLSCREEN_TAGS = ("poem_special", "bsod", "paper_glitch", "end", "intro")
+FULLSCREEN_TAGS = ("poem_special", "bsod", "paper_glitch", "end", "intro", "splash-glitch2")
 N_RECTS = {
     ("n_rects_ghost1",): ((580, 270), (20, 25)),
     ("n_rects_ghost2",): ((652, 264), (20, 25)),
@@ -257,7 +268,9 @@ def bake_act2(raw_dir: Path, resolver: ImageResolver, output_dir: Path,
         if image_name in existing or image_name in SKIP_OVERLAYS or image_name[0] == "splash_warning":
             continue
         if image_name in SOLID_LAYERS:
-            add_flat(image_name, Image.new("RGBA", SCENE_SIZE, SOLID_LAYERS[image_name]), "screen_layer")
+            r, g, b, a = SOLID_LAYERS[image_name]
+            add_flat(image_name, Image.new("RGBA", (1, 1), (r, g, b, 255)), "fullscreen_layer",
+                     extra={"opacity": a})
             continue
         if image_name in (("blood",), ("blood_eye",), ("blood_eye2",)):
             region, drops = {("blood",): ((0.25, 0.25, 0.75, 0.95), 60),
@@ -276,10 +289,27 @@ def bake_act2(raw_dir: Path, resolver: ImageResolver, output_dir: Path,
                 fill=(0, 0, 0, 255))
             add_flat(image_name, canvas, "screen_layer")
             continue
+        if image_name in COMPOSITES:
+            canvas = Image.new("RGBA", (1280, 720), (0, 0, 0, 255))
+            for layer in COMPOSITES[image_name]:
+                canvas.alpha_composite(Image.open(raw_dir / layer).convert("RGBA"))
+            flat = canvas.convert("RGB").resize(SCENE_SIZE, Image.Resampling.LANCZOS)
+            ident = counters.setdefault("background", 1000)
+            counters["background"] += 1
+            filename = f"bg_{ident:03d}_{SAFE.sub('_', '_'.join(image_name))}.png"
+            flat.save(img_dir / filename)
+            resources.append({"kind": "background", "image": list(image_name), "id": ident,
+                              "file": filename, "width": flat.width, "height": flat.height,
+                              "introduced_act": 3})
+            existing.add(image_name)
+            continue
         defn = resolver.table.get(image_name)
         if defn is not None and defn.kind == "condswitch":
             rows = []
-            for condition, path in defn.variants:
+            # Keep one picture per decomposition stage (1a/2a/3a) to save pack space.
+            kept = {"1a", "2a", "3a"}
+            kept_variants = [(c, p) for c, p in defn.variants if Path(p).stem in kept]
+            for condition, path in kept_variants:
                 variant_name = (image_name[0], Path(path).stem)
                 if variant_name not in existing:
                     synth = (f"{image_name[0]}$cond${path}",)

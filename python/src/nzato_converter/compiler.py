@@ -727,7 +727,7 @@ def build_pack(
         elif op in {"set_state", "add_state", "if_state", "if_state_gt", "persistent_load",
                     "persistent_store", "rand_state"} and not 0 <= int(event.get("state", 0)) < 16:
             raise ValueError(f"invalid state slot at event {index}")
-        if op in {"persistent_load", "persistent_store"} and not 0 <= int(event.get("key", 0)) < 16:
+        if op in {"persistent_load", "persistent_store"} and not 0 <= int(event.get("key", 0)) < 32:
             raise ValueError(f"invalid persistent key at event {index}")
         if op == "rand_state" and not 1 <= int(event.get("count", 0)) <= 16:
             raise ValueError(f"invalid random range at event {index}")
@@ -886,7 +886,7 @@ def build_pack(
         chinese_font=language == "zh",
     )
     glyphs = [g for g in glyphs
-              if not 0xE200 <= (struct.unpack_from('<I', g)[0] & 0xFFFFFF) < 0xF000]
+              if not 0xE200 <= (struct.unpack_from('<I', g)[0] & 0xFFFFFF) < 0xF200]
     glyphs.extend(poem_glyph_records(manifest.get('poem_fonts', [])))
     glitch_alphabet = str(manifest.get("glitch_alphabet", ""))
     if glitch_alphabet:
@@ -910,10 +910,16 @@ def build_pack(
     glyphs.sort(key=lambda g: struct.unpack_from('<I', g)[0])
     strings = bytearray()
 
+    string_cache: dict[bytes, tuple[int, int]] = {}
+
     def ref(value: str) -> tuple[int, int]:
         data = value.encode("utf-8")
+        cached = string_cache.get(data)
+        if cached is not None:
+            return cached
         offset = len(strings)
         strings.extend(data)
+        string_cache[data] = (offset, len(data))
         return offset, len(data)
 
     credits_ref = ref(credit_text)
@@ -1033,6 +1039,7 @@ def build_pack(
         elif event["op"] == "system":
             resource = int(event.get("action", 0))
             x = int(event.get("arg", 0))
+            y = int(event.get("arg2", 0))
         elif event["op"] in ("persistent_load", "persistent_store"):
             resource = int(event.get("state", 0))
             x = int(event.get("key", 0))

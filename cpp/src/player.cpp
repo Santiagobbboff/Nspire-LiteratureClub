@@ -552,6 +552,12 @@ void Player::apply(const Event& event) {
     }
     break;
   case Op::system:
+    if (event.resource == 4) {
+      if (event.x >= 0 && static_cast<size_t>(event.x) < story_state_.size())
+        story_state_[static_cast<size_t>(event.x)] =
+            character_file_exists(static_cast<size_t>(event.y)) ? 1 : 0;
+      break;
+    }
     if (replaying_)
       break;
     if (event.resource == 1)
@@ -559,7 +565,7 @@ void Player::apply(const Event& event) {
     else if (event.resource == 2)
       delete_character_file(static_cast<size_t>(event.x));
     else if (event.resource == 3)
-      write_character_files();
+      write_character_files(event.x > 0 ? static_cast<unsigned>(event.x) : 15U);
     break;
   case Op::effect:
     if (replaying_)

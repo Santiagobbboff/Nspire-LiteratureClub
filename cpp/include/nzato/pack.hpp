@@ -58,7 +58,8 @@ enum class Op : uint8_t {
   move = 20,
   poem = 21,
   // Act 2 additions (DDUI footer version 3).
-  system = 22,          // resource: 1 delete saves, 2 delete character x, 3 restore characters
+  system = 22,          // resource: 1 delete saves, 2 delete character x, 3 restore characters (mask x),
+                        //           4 slot x <- character file y exists
   persistent_load = 23, // story slot `resource` <- persistent key `x`
   persistent_store = 24,// persistent key `x` <- story slot `resource`
   effect = 25,          // resource: 0 stop, 1 tear, 2 invert; x duration ms (0 = until stop)
@@ -77,7 +78,16 @@ enum class PersistentKey : uint8_t {
   seen_ghost_menu = 8,
   deleted_saves = 9,
   seen_colors_poem = 10,
-  count = 16
+  monika_reload = 11,
+  current_monikatopic = 12,
+  monika_kill = 13,
+  tried_skip = 14,
+  monika_back = 15,
+  topics_0 = 16, // four 16-bit masks of used Monika topics (1-56)
+  topics_1 = 17,
+  topics_2 = 18,
+  topics_3 = 19,
+  count = 32
 };
 inline constexpr size_t persistent_value_count = static_cast<size_t>(PersistentKey::count);
 inline constexpr size_t character_file_count = 4;

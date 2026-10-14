@@ -25,7 +25,8 @@ GLITCH_ALPHABET = "¡¢£¤¥¦§©«¬®°±µ¶»¿ÀÃÆÇÐÑØÞßãæçð�
 
 ACT2_FILES = ("script-ch10.rpyc", "script-ch20.rpyc", "script-ch21.rpyc", "script-ch22.rpyc",
               "script-ch23.rpyc", "script-poemresponses2.rpyc", "script-exclusives2-natsuki.rpyc",
-              "script-exclusives2-yuri.rpyc", "poems_special.rpyc", "script-poemresponses.rpyc")
+              "script-exclusives2-yuri.rpyc", "poems_special.rpyc", "script-poemresponses.rpyc",
+              "script-ch30.rpyc", "script-ch40.rpyc")
 CHARACTER_TAGS = {"sayori": "s", "natsuki": "n", "yuri": "y", "monika": "m"}
 PERSIST = {"playthrough": 0, "yuri_kill": 1, "autoload": 2, "special_0": 3, "special_1": 4,
            "special_2": 5, "seen_eyes": 6, "seen_sticker": 7, "seen_ghost_menu": 8,
@@ -36,8 +37,7 @@ FLAG_SKIP_POEM, FLAG_N_POEMEARLY, FLAG_Y_GAVE, FLAG_NATSUKI_23, FLAG_FAINT = 1, 
 SLOT_N_APPEAL, SLOT_Y_APPEAL, SLOT_TEMP, SLOT_WORD, SLOT_MASK, SLOT_FLAGS = 7, 11, 8, 15, 1, 2
 SLOT_YURI_KILL = 15
 SLOT_CHOICE = 15  # menus/dialogs; free outside the poem game and the weekend
-Y_KILL_THRESHOLDS = ((1380, "3a"), (1180, "3c"), (1120, "3b"), (920, "3a"), (720, "2c"),
-                     (660, "2b"), (460, "2a"), (260, "1c"), (200, "1b"), (None, "1a"))
+Y_KILL_THRESHOLDS = ((920, "3a"), (460, "2a"), (None, "1a"))
 MUSIC_PYTHON = ("audio.", "audiostart", "renpy.music", "currentpos", "musicpos", "timeleft",
                 "track =", "startpos", "mouse_visible", "config.", "quick_menu", "allow_skipping",
                 "_history_list", "consolehistory", "srf =", "anticheat", "renpy.save_persistent",
@@ -358,6 +358,9 @@ class Act2Compiler(Day6Compiler):
             return
         self.events.append({"op": "show", "resource": name, "screen_x": row.get("screen_x", 0),
                             "screen_y": row.get("screen_y", 20)})
+        if row.get("opacity") is not None:
+            self.events.append({"op": "transform", "resource": name, "transform_options": 0x1000,
+                                "flags": int(row["opacity"])})
         self.overlay_layers.add(name)
         if alias:
             self.overlay_aliases[alias] = name
@@ -418,8 +421,9 @@ class Act2Compiler(Day6Compiler):
                                                        "fullscreen_background"):
                 self.show_overlay(image, alias)
                 return
-            if node_kind == "Scene" and row is not None and row.get("kind") == "background" \
+            if row is not None and row.get("kind") == "background" \
                     and image[0] != "bg" and not image[0].startswith(("n_cg", "y_cg", "s_cg")):
+                # Flattened rooms (Act 3) and other full pictures shown with `show`.
                 self.show_overlay(image)
                 return
             if image[0] not in CHARACTER_TAGS and image[0] != "bg" and node_kind == "Show" \
@@ -637,8 +641,10 @@ class Act2Compiler(Day6Compiler):
                                 pose.imspec = (tuple(ast.literal_eval(value).split()), None, None, [], None, None, [])
                                 pose.linenumber = node.linenumber
                                 self.linear_node(pose, script)
-                    elif node.label == "updateconsole":
+                    elif node.label in ("updateconsole", "hideconsole", "updateconsole_clearall"):
                         continue
+                    elif node.label == "poem":
+                        self.act3_poem()
                     else:
                         self.invoke(node.label, depth + 1)
                 elif k == "Python":
@@ -693,7 +699,8 @@ class Act2Compiler(Day6Compiler):
             if not nodes(source.block, script, continuation):
                 finish(label_name, script, continuation)
         self.label(done)
-        self.merge(exits)
+        if exits:
+            self.merge(exits)  # a label that only ever jumps away (Act 3's loop) has no exit
 
 
 # -- Act 2 assembly ------------------------------------------------------------
@@ -921,31 +928,45 @@ def extend_act2(previous):
 
     # -- New Game entry ---------------------------------------------------------
     compiler.label("act_dispatch")
-    events.append({"op": "system", "action": 3})
+    # splash.rpyc restores character files per playthrough: monika 1, natsuki 2, sayori 4, yuri 8.
+    events.append({"op": "persistent_load", "state": SLOT_TEMP, "key": PERSIST["playthrough"]})
+    for value, mask in ((0, 15), (1, 11), (2, 1), (3, 0), (4, 14)):
+        skip = compiler.fresh("restore_next")
+        hit = compiler.fresh("restore")
+        events.append({"op": "if_state", "state": SLOT_TEMP, "value": value, "target": hit})
+        compiler.jump(skip)
+        compiler.label(hit)
+        if mask:
+            events.append({"op": "system", "action": 3, "arg": mask})
+        compiler.jump("act_dispatch_autoload")
+        compiler.label(skip)
+    compiler.label("act_dispatch_autoload")
     events.append({"op": "persistent_load", "state": SLOT_TEMP, "key": PERSIST["autoload"]})
     for value, target in ((1, "act2_autoload_kill1"), (2, "act2_autoload_kill2"),
-                          (3, "act2_autoload_kill3"), (4, "act3_placeholder")):
+                          (3, "act2_autoload_kill3"), (4, "act3_start"), (5, "act3_entry_5"),
+                          (6, "act3_entry_6"), (7, "act3_entry_7"), (8, "act3_entry_8"),
+                          (9, "act3_entry_9")):
         events.append({"op": "if_state", "state": SLOT_TEMP, "value": value, "target": target})
     events.append({"op": "persistent_load", "state": SLOT_TEMP, "key": PERSIST["playthrough"]})
-    for value, target in ((1, "act2_ch10"), (2, "act2_ch20"), (3, "act3_placeholder"),
-                          (4, "act3_placeholder")):
+    for value, target in ((1, "act2_ch10"), (2, "act2_ch20"), (3, "act3_start"),
+                          (4, "act4_placeholder")):
         events.append({"op": "if_state", "state": SLOT_TEMP, "value": value, "target": target})
     compiler.jump("act1_start")
 
-    compiler.label("act3_placeholder")
-    events.append({"op": "say", "speaker_en": "Monika",
-                   "text_en": "Act 3 is not part of this pack yet. {glitch=12}"})
+    compiler.label("act4_placeholder")
+    events.append({"op": "say", "speaker_en": "Sayori",
+                   "text_en": "Act 4 is not part of this pack yet. {glitch=12}"})
     events.append({"op": "choice", "state": SLOT_CHOICE, "count": 2,
-                   "text_en": "Start over from Act 1? This resets Act 2 progress and deletes all saves."})
-    events.append({"op": "choice_option", "value": 0, "text_en": "Start over", "target": "act3_reset"})
-    events.append({"op": "choice_option", "value": 1, "text_en": "Not now", "target": "act3_back"})
-    compiler.label("act3_reset")
+                   "text_en": "Start over from Act 1? This resets all progress and deletes all saves."})
+    events.append({"op": "choice_option", "value": 0, "text_en": "Start over", "target": "act4_reset"})
+    events.append({"op": "choice_option", "value": 1, "text_en": "Not now", "target": "act4_back"})
+    compiler.label("act4_reset")
     compiler.set(SLOT_TEMP, 0)
-    for key in ("playthrough", "autoload", "yuri_kill", "special_0", "special_1", "special_2"):
-        events.append({"op": "persistent_store", "state": SLOT_TEMP, "key": PERSIST[key]})
+    for key in range(32):
+        events.append({"op": "persistent_store", "state": SLOT_TEMP, "key": key})
     events.append({"op": "system", "action": 1})
     events.append({"op": "system", "action": 3})
-    compiler.label("act3_back")
+    compiler.label("act4_back")
     events.append({"op": "end", "flags": 0})
 
     # -- Act 2 start (ch10 glitched restart or ch20 from the menu) -----------
@@ -997,3 +1018,5 @@ def extend_act2(previous):
             events.append({"op": "persistent_store", "state": SLOT_YURI_KILL, "key": PERSIST["yuri_kill"]})
         compiler.invoke(label)
         events.append({"op": "end", "flags": 0})
+    from compile_act3 import extend_act3
+    extend_act3(compiler)

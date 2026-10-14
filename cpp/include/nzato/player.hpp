@@ -155,8 +155,9 @@ private:
   std::string expand_glitch(std::string_view text, uint32_t seed) const;
   void screen_effects(uint16_t* dst) const;
   void delete_all_saves();
-  void write_character_files() const;
+  void write_character_files(unsigned mask = 15) const;
   void delete_character_file(size_t index) const;
+  bool character_file_exists(size_t index) const;
   bool credits_roll_active_{};
   uint32_t credits_roll_ms_{};
   static constexpr uint32_t credits_delay_ms = 5000;

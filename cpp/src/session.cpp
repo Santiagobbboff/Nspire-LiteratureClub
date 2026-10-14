@@ -38,7 +38,7 @@ struct PersistentHead {
 };
 #pragma pack(push, 1)
 struct PersistentValues {
-  char magic[4]; // "DDP3"
+  char magic[4]; // "DDP4" (32 values); "DDP3" packs held 16
   int16_t values[persistent_value_count];
 };
 #pragma pack(pop)
@@ -122,9 +122,12 @@ void Player::load_persistent() {
     if (ddlc_ui_ && std::fread(&seen, 1, 1, file) == 1 && seen == 1)
       notice_seen_ = true;
     PersistentValues values{};
-    if (ddlc_ui_ && std::fread(&values, sizeof(values), 1, file) == 1 &&
-        std::memcmp(values.magic, "DDP3", 4) == 0)
-      std::copy(std::begin(values.values), std::end(values.values), persistent_values_.begin());
+    if (ddlc_ui_ && std::fread(&values.magic, 4, 1, file) == 1) {
+      const size_t count = std::memcmp(values.magic, "DDP4", 4) == 0 ? persistent_value_count
+                           : std::memcmp(values.magic, "DDP3", 4) == 0 ? 16 : 0;
+      if (count && std::fread(values.values, sizeof(int16_t), count, file) == count)
+        std::copy(values.values, values.values + count, persistent_values_.begin());
+    }
   }
   std::fclose(file);
 }
@@ -150,7 +153,7 @@ void Player::save_persistent() const {
     const uint8_t seen = notice_seen_ ? 1 : 0;
     std::fwrite(&seen, 1, 1, file);
     PersistentValues values{};
-    std::memcpy(values.magic, "DDP3", 4);
+    std::memcpy(values.magic, "DDP4", 4);
     std::copy(persistent_values_.begin(), persistent_values_.end(), std::begin(values.values));
     std::fwrite(&values, sizeof(values), 1, file);
   }
@@ -194,12 +197,14 @@ void ensure_character_directory(std::string_view directory) {
 }
 } // namespace
 
-void Player::write_character_files() const {
+void Player::write_character_files(unsigned mask) const {
   if (!pack_.has_character_files())
     return;
   ensure_character_directory(pack_.directory());
   std::vector<uint8_t> blob;
   for (size_t index = 0; index < character_file_count; ++index) {
+    if (!(mask & (1U << index)))
+      continue;
     char name[512];
     character_path(name, sizeof(name), pack_.directory(), index);
     FILE* existing = std::fopen(name, "rb");
@@ -223,6 +228,18 @@ void Player::delete_character_file(size_t index) const {
   char name[512];
   character_path(name, sizeof(name), pack_.directory(), index);
   std::remove(name);
+}
+
+bool Player::character_file_exists(size_t index) const {
+  if (index >= character_file_count)
+    return false;
+  char name[512];
+  character_path(name, sizeof(name), pack_.directory(), index);
+  FILE* file = std::fopen(name, "rb");
+  if (!file)
+    return false;
+  std::fclose(file);
+  return true;
 }
 
 void Player::load_save_index() {

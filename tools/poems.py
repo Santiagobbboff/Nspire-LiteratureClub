@@ -8,7 +8,7 @@ ACT1_POEMS = {'poem_s1', 'poem_s2', 'poem_s3', 'poem_n1', 'poem_n2', 'poem_n3',
               'poem_n3b', 'poem_y1', 'poem_y2', 'poem_y3', 'poem_y3b',
               'poem_m1', 'poem_m2', 'poem_m3',
               # Act 2
-              'poem_y22', 'poem_y23', 'poem_n2b', 'poem_n23', 'poem_m21', 'poem_m22'}
+              'poem_y22', 'poem_y23', 'poem_n2b', 'poem_n23', 'poem_m21', 'poem_m22', 'poem_m4'}
 FONT_INFO = {'sayori': ('s1.ttf', 0xE200, 18, 25),
              'natsuki': ('n1.ttf', 0xE400, 15, 20),
              'yuri': ('y1.ttf', 0xE600, 20, 28),

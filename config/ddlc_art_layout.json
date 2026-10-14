@@ -13720,32 +13720,6 @@
       "introduced_act": 2
     },
     {
-      "kind": "screen_layer",
-      "image": [
-        "Solid(\"#440000\")"
-      ],
-      "id": 0,
-      "file": "ovl_000_Solid_440000_.png",
-      "width": 320,
-      "height": 180,
-      "screen_x": 0,
-      "screen_y": 20,
-      "introduced_act": 2
-    },
-    {
-      "kind": "screen_layer",
-      "image": [
-        "Solid(\"ff0000\")"
-      ],
-      "id": 1,
-      "file": "ovl_001_Solid_ff0000_.png",
-      "width": 320,
-      "height": 180,
-      "screen_x": 0,
-      "screen_y": 20,
-      "introduced_act": 2
-    },
-    {
       "kind": "fullscreen_background",
       "image": [
         "bg",
@@ -13809,32 +13783,6 @@
       "height": 240,
       "screen_x": 0,
       "screen_y": 0,
-      "introduced_act": 2
-    },
-    {
-      "kind": "screen_layer",
-      "image": [
-        "dark"
-      ],
-      "id": 5,
-      "file": "ovl_005_dark.png",
-      "width": 320,
-      "height": 180,
-      "screen_x": 0,
-      "screen_y": 20,
-      "introduced_act": 2
-    },
-    {
-      "kind": "screen_layer",
-      "image": [
-        "darkred"
-      ],
-      "id": 6,
-      "file": "ovl_006_darkred.png",
-      "width": 320,
-      "height": 180,
-      "screen_x": 0,
-      "screen_y": 20,
       "introduced_act": 2
     },
     {
@@ -14217,82 +14165,10 @@
       "kind": "background",
       "image": [
         "y_kill",
-        "3c"
-      ],
-      "id": 61,
-      "file": "bg_061_y_kill-cond-images-cg-y_kill-3c.png",
-      "width": 320,
-      "height": 180,
-      "introduced_act": 2
-    },
-    {
-      "kind": "background",
-      "image": [
-        "y_kill",
-        "3b"
-      ],
-      "id": 62,
-      "file": "bg_062_y_kill-cond-images-cg-y_kill-3b.png",
-      "width": 320,
-      "height": 180,
-      "introduced_act": 2
-    },
-    {
-      "kind": "background",
-      "image": [
-        "y_kill",
-        "2c"
-      ],
-      "id": 63,
-      "file": "bg_063_y_kill-cond-images-cg-y_kill-2c.png",
-      "width": 320,
-      "height": 180,
-      "introduced_act": 2
-    },
-    {
-      "kind": "background",
-      "image": [
-        "y_kill",
-        "2b"
-      ],
-      "id": 64,
-      "file": "bg_064_y_kill-cond-images-cg-y_kill-2b.png",
-      "width": 320,
-      "height": 180,
-      "introduced_act": 2
-    },
-    {
-      "kind": "background",
-      "image": [
-        "y_kill",
         "2a"
       ],
       "id": 65,
       "file": "bg_065_y_kill-cond-images-cg-y_kill-2a.png",
-      "width": 320,
-      "height": 180,
-      "introduced_act": 2
-    },
-    {
-      "kind": "background",
-      "image": [
-        "y_kill",
-        "1c"
-      ],
-      "id": 66,
-      "file": "bg_066_y_kill-cond-images-cg-y_kill-1c.png",
-      "width": 320,
-      "height": 180,
-      "introduced_act": 2
-    },
-    {
-      "kind": "background",
-      "image": [
-        "y_kill",
-        "1b"
-      ],
-      "id": 67,
-      "file": "bg_067_y_kill-cond-images-cg-y_kill-1b.png",
       "width": 320,
       "height": 180,
       "introduced_act": 2
@@ -14363,6 +14239,320 @@
       "screen_x": 0,
       "screen_y": 20,
       "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "3g"
+      ],
+      "id": 441,
+      "layers": [
+        {
+          "name": "sprite_atom_052",
+          "id": 52,
+          "role": "base",
+          "file": "sprite_052_natsuki_2l-1r.png",
+          "width": 102,
+          "height": 102,
+          "x_offset": 5,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_030",
+          "id": 30,
+          "role": "expression",
+          "file": "sprite_030_natsuki_g.png",
+          "width": 72,
+          "height": 55,
+          "x_offset": 4,
+          "y_offset": -101
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "3y"
+      ],
+      "id": 442,
+      "layers": [
+        {
+          "name": "sprite_atom_052",
+          "id": 52,
+          "role": "base",
+          "file": "sprite_052_natsuki_2l-1r.png",
+          "width": 102,
+          "height": 102,
+          "x_offset": 5,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_055",
+          "id": 55,
+          "role": "expression",
+          "file": "sprite_055_natsuki_y.png",
+          "width": 72,
+          "height": 55,
+          "x_offset": 4,
+          "y_offset": -101
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "4i"
+      ],
+      "id": 443,
+      "layers": [
+        {
+          "name": "sprite_atom_053",
+          "id": 53,
+          "role": "base",
+          "file": "sprite_053_natsuki_2l-2r.png",
+          "width": 100,
+          "height": 102,
+          "x_offset": 4,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_032",
+          "id": 32,
+          "role": "expression",
+          "file": "sprite_032_natsuki_i.png",
+          "width": 72,
+          "height": 55,
+          "x_offset": 4,
+          "y_offset": -101
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "sayori",
+        "1t"
+      ],
+      "id": 444,
+      "layers": [
+        {
+          "name": "sprite_atom_069",
+          "id": 69,
+          "role": "base",
+          "file": "sprite_069_sayori_1l-1r.png",
+          "width": 126,
+          "height": 114,
+          "x_offset": 6,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_144",
+          "id": 144,
+          "role": "expression",
+          "file": "sprite_day5_atom_144.png",
+          "width": 66,
+          "height": 57,
+          "x_offset": 4,
+          "y_offset": -114
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "sayori",
+        "end-glitch"
+      ],
+      "id": 445,
+      "layers": [
+        {
+          "name": "sprite_atom_213",
+          "id": 213,
+          "role": "base",
+          "file": "sprite_213_sayori_end-glitch.png",
+          "width": 130,
+          "height": 178,
+          "x_offset": 0,
+          "y_offset": -1
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "monika_bg"
+      ],
+      "id": 69,
+      "file": "bg_069_monika_bg.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 3
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "monika_bg_highlight"
+      ],
+      "id": 23,
+      "file": "ovl_023_monika_bg_highlight.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "monika_body_glitch1"
+      ],
+      "id": 24,
+      "file": "ovl_024_monika_body_glitch1.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "monika_body_glitch2"
+      ],
+      "id": 25,
+      "file": "ovl_025_monika_body_glitch2.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "monika_room"
+      ],
+      "id": 70,
+      "file": "bg_070_monika_room.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 3
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "monika_room_highlight"
+      ],
+      "id": 26,
+      "file": "ovl_026_monika_room_highlight.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "monika_scare"
+      ],
+      "id": 27,
+      "file": "ovl_027_monika_scare.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "room_glitch"
+      ],
+      "id": 28,
+      "file": "ovl_028_room_glitch.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "splash-glitch2"
+      ],
+      "id": 17,
+      "file": "fs_017_splash-glitch2.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_layer",
+      "image": [
+        "Solid(\"#440000\")"
+      ],
+      "id": 1,
+      "file": "fsl_001_Solid_440000_.png",
+      "width": 1,
+      "height": 1,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2,
+      "opacity": 90
+    },
+    {
+      "kind": "fullscreen_layer",
+      "image": [
+        "Solid(\"ff0000\")"
+      ],
+      "id": 2,
+      "file": "fsl_002_Solid_ff0000_.png",
+      "width": 1,
+      "height": 1,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2,
+      "opacity": 70
+    },
+    {
+      "kind": "fullscreen_layer",
+      "image": [
+        "dark"
+      ],
+      "id": 3,
+      "file": "fsl_003_dark.png",
+      "width": 1,
+      "height": 1,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2,
+      "opacity": 228
+    },
+    {
+      "kind": "fullscreen_layer",
+      "image": [
+        "darkred"
+      ],
+      "id": 4,
+      "file": "fsl_004_darkred.png",
+      "width": 1,
+      "height": 1,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2,
+      "opacity": 200
     }
   ],
   "unresolved": [
@@ -14427,20 +14617,6 @@
         ]
       },
       {
-        "condition": "persistent.yuri_kill >= 1180",
-        "image": [
-          "y_kill",
-          "3c"
-        ]
-      },
-      {
-        "condition": "persistent.yuri_kill >= 1120",
-        "image": [
-          "y_kill",
-          "3b"
-        ]
-      },
-      {
         "condition": "persistent.yuri_kill >= 920",
         "image": [
           "y_kill",
@@ -14448,38 +14624,10 @@
         ]
       },
       {
-        "condition": "persistent.yuri_kill >= 720",
-        "image": [
-          "y_kill",
-          "2c"
-        ]
-      },
-      {
-        "condition": "persistent.yuri_kill >= 660",
-        "image": [
-          "y_kill",
-          "2b"
-        ]
-      },
-      {
         "condition": "persistent.yuri_kill >= 460",
         "image": [
           "y_kill",
           "2a"
-        ]
-      },
-      {
-        "condition": "persistent.yuri_kill >= 260",
-        "image": [
-          "y_kill",
-          "1c"
-        ]
-      },
-      {
-        "condition": "persistent.yuri_kill >= 200",
-        "image": [
-          "y_kill",
-          "1b"
         ]
       },
       {
