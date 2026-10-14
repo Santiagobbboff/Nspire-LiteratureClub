@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <climits>
 #include <cstdio>
+#include <cstdint>
 #include <cstring>
 #include <string>
 #ifdef _WIN32
@@ -37,6 +38,8 @@ struct PackFile {
     pos = to;
     return true;
   }
+  size_t stream_part{SIZE_MAX};
+  uint64_t stream_pos{};
   size_t read(void* out, size_t n) {
     size_t done = 0;
     uint8_t* target = static_cast<uint8_t*>(out);
@@ -45,8 +48,13 @@ struct PackFile {
       while (part + 1 < parts.size() && pos >= starts[part + 1]) ++part;
       const uint64_t local = pos - starts[part];
       const size_t available = static_cast<size_t>(std::min<uint64_t>(n - done, starts[part + 1] - pos));
-      if (std::fseek(parts[part], static_cast<long>(local), SEEK_SET) != 0) break;
+      // Sequential reads skip the seek; flash seeks are not free on the calculator.
+      if (part != stream_part || local != stream_pos) {
+        if (std::fseek(parts[part], static_cast<long>(local), SEEK_SET) != 0) break;
+      }
       const size_t got = std::fread(target + done, 1, available, parts[part]);
+      stream_part = part;
+      stream_pos = local + got;
       pos += got;
       done += got;
       if (got != available) break;

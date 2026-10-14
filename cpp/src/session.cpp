@@ -518,7 +518,11 @@ bool Player::restore_to(size_t target, int save_slot) {
     cursor_++;
   if (cursor_ < pack_.events().size())
     cursor_++;
-  if (pack_.start_event() && pack_.start_event() < pack_.events().size())
+  // Act 1 saves sit before the Act dispatch block and replay from the
+  // original first event; later acts replay through the dispatch, which the
+  // current persistent playthrough routes the same way it did when saving.
+  if (pack_.start_event() && pack_.start_event() < pack_.events().size() &&
+      target >= pack_.start_event())
     cursor_ = pack_.start_event();
   replaying_ = true;
   size_t replay_budget = pack_.events().size() * 4;
