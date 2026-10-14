@@ -171,13 +171,17 @@ void Player::delete_all_saves() {
 }
 
 namespace {
-void character_path(char* output, size_t size, std::string_view directory, size_t index) {
+// characters/<name>.chr.tns beside the pack, or <name>.chr.tns in the pack
+// folder itself when the subfolder cannot be created (flat = true).
+void character_path(char* output, size_t size, std::string_view directory, size_t index,
+                    bool flat) {
   if (!size)
     return;
   char* out = output;
   char* const end = output + size - 1;
   append_text(out, end, directory);
-  append_text(out, end, "characters/");
+  if (!flat)
+    append_text(out, end, "characters/");
   append_text(out, end, character_file_names[index]);
 #ifdef _WIN32
   append_text(out, end, ".chr");
@@ -186,7 +190,7 @@ void character_path(char* output, size_t size, std::string_view directory, size_
 #endif
   *out = '\0';
 }
-void ensure_character_directory(std::string_view directory) {
+bool ensure_character_directory(std::string_view directory) {
   std::string path(directory);
   path += "characters";
 #ifdef _WIN32
@@ -194,27 +198,35 @@ void ensure_character_directory(std::string_view directory) {
 #else
   mkdir(path.c_str(), 0755);
 #endif
+  std::string probe = path + "/.probe.tns";
+  FILE* file = std::fopen(probe.c_str(), "wb");
+  if (!file)
+    return false;
+  std::fclose(file);
+  std::remove(probe.c_str());
+  return true;
 }
 } // namespace
 
 void Player::write_character_files(unsigned mask) const {
   if (!pack_.has_character_files())
     return;
-  ensure_character_directory(pack_.directory());
+  const bool flat = !ensure_character_directory(pack_.directory());
   std::vector<uint8_t> blob;
   for (size_t index = 0; index < character_file_count; ++index) {
     if (!(mask & (1U << index)))
       continue;
-    char name[512];
-    character_path(name, sizeof(name), pack_.directory(), index);
-    FILE* existing = std::fopen(name, "rb");
-    if (existing) {
-      std::fclose(existing);
+    if (character_file_exists(index))
       continue;
-    }
     if (!pack_.read_character_file(index, blob))
       continue;
+    char name[512];
+    character_path(name, sizeof(name), pack_.directory(), index, flat);
     FILE* file = std::fopen(name, "wb");
+    if (!file && !flat) {
+      character_path(name, sizeof(name), pack_.directory(), index, true);
+      file = std::fopen(name, "wb");
+    }
     if (!file)
       continue;
     std::fwrite(blob.data(), 1, blob.size(), file);
@@ -226,20 +238,25 @@ void Player::delete_character_file(size_t index) const {
   if (index >= character_file_count)
     return;
   char name[512];
-  character_path(name, sizeof(name), pack_.directory(), index);
-  std::remove(name);
+  for (const bool flat : {false, true}) {
+    character_path(name, sizeof(name), pack_.directory(), index, flat);
+    std::remove(name);
+  }
 }
 
 bool Player::character_file_exists(size_t index) const {
   if (index >= character_file_count)
     return false;
   char name[512];
-  character_path(name, sizeof(name), pack_.directory(), index);
-  FILE* file = std::fopen(name, "rb");
-  if (!file)
-    return false;
-  std::fclose(file);
-  return true;
+  for (const bool flat : {false, true}) {
+    character_path(name, sizeof(name), pack_.directory(), index, flat);
+    FILE* file = std::fopen(name, "rb");
+    if (file) {
+      std::fclose(file);
+      return true;
+    }
+  }
+  return false;
 }
 
 void Player::load_save_index() {

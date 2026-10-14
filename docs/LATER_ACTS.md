@@ -91,9 +91,10 @@ bits 2-5 and land in the existing gallery mask, so Act 1 event indices do not mo
 - Decoy menus (`renpy.display_menu(... interact=False)`) are not drawn. The rigged
   festival choice is an ordinary three-option menu. Menus with more than ten
   options show the first ten.
-- The `.chr` files are written beside the pack so the player can inspect or delete
-  them with the document browser; the game only reads back whether `monika.chr`
-  exists once Act 3 is ported.
+- The `.chr` files are written beside the pack (`characters/<name>.chr.tns`, or
+  `<name>.chr.tns` directly in the pack folder when the subfolder cannot be created)
+  so the player can inspect or delete them with the document browser; the game reads
+  back only whether `monika.chr` exists.
 - Act 3: the window/room layers are one flattened background (no scrolling masks),
   Monika's glitch frames are static, the RectStatic/colour-wash effects are skipped,
   the waiting between topics keeps the original 20-40 s, and Monika's slow unskippable
