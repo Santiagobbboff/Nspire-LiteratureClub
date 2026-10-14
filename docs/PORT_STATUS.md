@@ -31,7 +31,7 @@ licenses and current documentation. Private work, generated packs, extracted gam
 content, backups, obsolete upstream tools and old development documents were removed.
 `dist/ndless/ddlc.tns` is the launcher release artifact; no content pack is bundled.
 
-A locally generated full pack (Acts 1-4) contains about 62,000 events and about 400
+A locally generated full pack (Acts 1-4) contains about 61,200 events and about 390
 art resources, and is about 16.7 MB. Branch targets are 32-bit since the DDUI version 3
 format, so the former 32,768-event ceiling no longer applies. DDLC save/settings
 filenames are `ddlc-0.sav.tns` through `ddlc-23.sav.tns` and `ddlc.sav.tns`; the
