@@ -7,6 +7,7 @@ timed sequence followed by the engine's scrolling credit roll.
 """
 from __future__ import annotations
 
+import ast
 import re
 
 from compile_act3 import Act3Compiler, SLOT_KILL, SLOT_SCRATCH
@@ -22,6 +23,31 @@ CREDIT_CARDS = [
     ("Special Thanks", "David Evelyn\nCorey Shin"),
     ("Special Thanks", "Alecia Bardachino\nMatt Naples"), ("Special Thanks", "Monika\n{player}"),
 ]
+
+
+def local_strings(raw_dir):
+    """The post-credits error dialog (credits.rpyc) and the splash screen's
+    "delete your save data?" menu captions (splash.rpyc), read from the
+    player's own scripts rather than embedded here."""
+    _, top = load_rpyc(raw_dir / "credits.rpyc")
+    error_message = None
+    for node in flatten(top):
+        if kind(node) == "UserStatement" and 'dialog(message="' in str(getattr(node, "line", "")):
+            found = re.search(r'message="((?:[^"\\]|\\.)*)"', node.line)
+            if found:
+                error_message = ast.literal_eval('"' + found.group(1) + '"')
+                break
+    _, top = load_rpyc(raw_dir / "splash.rpyc")
+    captions = None
+    for node in flatten(top):
+        if kind(node) == "Menu":
+            items = [caption for caption, _condition, _block in node.items]
+            if len(items) == 3 and "save" in items[0].lower():
+                captions = items
+                break
+    if error_message is None or captions is None:
+        raise ValueError("credits.rpyc/splash.rpyc: expected post-credits texts not found")
+    return error_message, captions
 
 
 def credits_lines(raw_dir):
@@ -173,13 +199,11 @@ def extend_act4(previous):
     scene_named(("poem_end_clearall",))
     compiler.label(shown)
     pause(-1)
-    compiler.dialog("Error: Script file is missing or corrupt.\nPlease reinstall the game.", ("OK",))
-    events.append({"op": "choice", "state": SLOT_CHOICE, "count": 2,
-                   "text_en": "Delete all save data and start over from Act 1?"})
-    events.append({"op": "choice_option", "value": 0, "text_en": "Yes, delete my existing data.",
-                   "target": "act4_reset"})
-    events.append({"op": "choice_option", "value": 1, "text_en": "No, continue where I left off.",
-                   "target": "act4_back"})
+    error_message, captions = local_strings(compiler.raw_dir)
+    compiler.dialog(error_message, ("OK",))
+    events.append({"op": "choice", "state": SLOT_CHOICE, "count": 2, "text_en": captions[0]})
+    events.append({"op": "choice_option", "value": 0, "text_en": captions[1], "target": "act4_reset"})
+    events.append({"op": "choice_option", "value": 1, "text_en": captions[2], "target": "act4_back"})
     compiler.label("act4_reset")
     compiler.set(SLOT_TEMP, 0)
     for key in range(32):

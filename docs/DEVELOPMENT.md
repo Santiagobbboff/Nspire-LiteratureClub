@@ -24,6 +24,18 @@ cd cpp/platform/ndless
 make -j4 ../../../dist/ndless/ddlc.tns
 ```
 
+## Headless playthrough tests (Linux)
+
+```sh
+cmake -S . -B build-headless && cmake --build build-headless --target ddlc_headless
+./build-headless/cpp/ddlc_headless path/to/ddlc.nzp.tns
+```
+
+The engine reads one command per line from stdin (`tick <ms>`, `e`/`x`/`u`/`d`/`l`/`r`
+for input, `f` fast-forward, `char <code>` for the name entry, `st` prints the state,
+`shot <file.ppm>` writes a frame, `q` quits) and is what the Act 2-4 playthrough
+checks were run with.
+
 ## Generate content
 
 Follow [README](../README.md) using an original unmodified PC installation. 

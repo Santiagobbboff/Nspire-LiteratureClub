@@ -246,7 +246,7 @@ Loading checks header/version, choice count and required payload reads before ex
 
 ### Separate persistent settings
 
-`PersistentHead` contains magic `DDGP` and a uint64 generic gallery-unlock mask. It is **not packed** like SaveHead, so native struct padding makes its raw byte size ABI-dependent. The DDLC background-mode byte follows that header: 0=Original, 1=Stretch, 2=Crop. Default is Original. A second byte records notice acknowledgement: 1=seen. Older settings without that byte preserve their background preference and show the notice once. nZATO's NZGP file is not read/imported. A `DDP3` section with 16 int16 values follows (playthrough, yuri_kill, autoload, special poems, Easter-egg flags; see [ACT2](ACT2.md)). New Game resets story state, not this preferences file or manual save files.
+`PersistentHead` contains magic `DDGP` and a uint64 generic gallery-unlock mask. It is **not packed** like SaveHead, so native struct padding makes its raw byte size ABI-dependent. The DDLC background-mode byte follows that header: 0=Original, 1=Stretch, 2=Crop. Default is Original. A second byte records notice acknowledgement: 1=seen. Older settings without that byte preserve their background preference and show the notice once. nZATO's NZGP file is not read/imported. A `DDP3` section with 16 int16 values follows (playthrough, yuri_kill, autoload, special poems, Easter-egg flags; see [LATER_ACTS](LATER_ACTS.md)). New Game resets story state, not this preferences file or manual save files.
 
 ## 8. Non-slot state that affects behavior
 
@@ -306,7 +306,7 @@ The compiled `end` with flags=2 starts credits. Internal `ended_` stops story ad
 - Keep every possible body/head atom in branch cleanup. Preserve call-return and branch-state merges.
 - Word menus rely on prompt recognition, 228-word capacity and the target's three score additions plus jump. Update runtime and compiler together if this event structure changes.
 - Existing save replay depends on compiled event/menu indices and the random seed. Review compatibility explicitly when shifting those indices.
-- Branch targets are 32-bit (DDUI version 3); the old 15-bit ceiling is gone. Act 2's state, persistent values and the new ops are documented in [ACT2](ACT2.md). The Act dispatch label is appended after the Act 1 credits and chosen through the footer's start event, which keeps Act 1 event indices stable.
+- Branch targets are 32-bit (DDUI version 3); the old 15-bit ceiling is gone. Act 2's state, persistent values and the new ops are documented in [LATER_ACTS](LATER_ACTS.md). The Act dispatch label is appended after the Act 1 credits and chosen through the footer's start event, which keeps Act 1 event indices stable.
 - Current executable/pack are `dist/ndless/ddlc.tns` and `ddlc.nzp.tns`. `tools/make_ddlc_pack.py` accepts a local original game installation and defaults to `dist/ndless/ddlc.nzp.tns`. Generated story/intermediates stay in a private work directory. See README and DEVELOPMENT for build details.
 
 ## 11. External UI images, poem data and first launch

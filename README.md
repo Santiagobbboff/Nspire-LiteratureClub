@@ -15,7 +15,7 @@ weekend, Monika's room, the epilogue and the credits. The character files appear
 (and disappear) in a `characters` folder next to the pack; to leave Monika's room,
 quit the game, delete `characters/monika.chr.tns` in the document browser and
 relaunch. The pack is about 16.7 MB, so keep enough free space on the calculator.
-See [docs/ACT2.md](docs/ACT2.md) for details.
+See [docs/LATER_ACTS.md](docs/LATER_ACTS.md) for details.
 
 ## How to Generate a Content Pack
 

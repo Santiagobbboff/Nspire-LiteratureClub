@@ -8,6 +8,7 @@ relaunching is what moves the story on, as in the original.
 """
 from __future__ import annotations
 
+import ast
 import random
 import re
 
@@ -224,11 +225,14 @@ class Act3Compiler(Act2Compiler):
                 self.pick_topic()
                 return
             if "persistent.monika_back" in source:
-                # Act 4: Monika's file came back -> her "stop playing with my heart" dialog.
+                # Act 4: Monika's file came back -> her dialog, read from the local script.
+                message = re.search(r'message="((?:[^"\\]|\\.)*)"', source)
+                if not message:
+                    raise ValueError("ch40_main: cannot read Monika's dialog message")
                 self.events.append({"op": "system", "action": 4, "arg": SLOT_SCRATCH, "arg2": 0})
                 absent = self.fresh("monika_absent")
                 self.events.append({"op": "if_state", "state": SLOT_SCRATCH, "value": 0, "target": absent})
-                self.dialog("Please stop playing with my heart.\nI don't want to come back.")
+                self.dialog(ast.literal_eval('"' + message.group(1) + '"'))
                 self.label(absent)
                 return
             self.report_skip("multi-line Act 3 Python (platform/stream checks)")

@@ -71,3 +71,9 @@ if(WIN32)
         $<TARGET_FILE_DIR:ddlc>/ddlc.nzp)
   endif()
 endif()
+
+if(UNIX AND NOT APPLE)
+  # Stdin-driven engine for automated playthrough tests (see docs/DEVELOPMENT.md).
+  add_executable(ddlc_headless platform/headless/main.cpp)
+  target_link_libraries(ddlc_headless PRIVATE nzato_core)
+endif()

@@ -19,7 +19,7 @@ Updated 2026-10-10.
   responses and exclusives, special poems, Yuri's death and the weekend loop with
   its launch-resume behaviour, Monika's room with all her topics and the character
   file deletion that ends it, the club epilogue with both endings, and the credits.
-  Character files are real files next to the pack. See [ACT2](ACT2.md).
+  Character files are real files next to the pack. See [LATER_ACTS](LATER_ACTS.md).
 
 Audio, full Ren'Py transition fidelity, random Easter eggs and poem chibi feedback
 animations are not implemented.
