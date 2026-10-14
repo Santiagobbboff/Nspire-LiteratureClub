@@ -689,6 +689,10 @@ class Act2Compiler(Day6Compiler):
             if label_name not in self.labels:
                 raise ValueError(f"unknown Act 2 jump destination: {label_name}")
             incoming = [s for label, s, _c in pending if label == label_name]
+            # A nested label reached both by jumps (no continuation) and by
+            # falling into it keeps its parent's remaining statements.
+            if continuation is None:
+                continuation = next((c for label, _s, c in pending if label == label_name and c), None)
             pending[:] = [entry for entry in pending if entry[0] != label_name]
             self.merge([snap, *incoming])
             script, source = self.labels[label_name]
