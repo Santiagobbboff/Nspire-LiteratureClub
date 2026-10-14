@@ -263,6 +263,8 @@ class Act2Compiler(Day6Compiler):
     def compile_pause(self, source):
         call = ast.parse(source).body[0].value
         if not call.args:
+            # `$ pause()` with the quick menu off: hide the dialogue window, wait for input.
+            self.events.append({"op": "window", "visible": False})
             self.events.append({"op": "pause", "duration_ms": -1})
             return
         argument = call.args[0]
@@ -686,6 +688,8 @@ class Act2Compiler(Day6Compiler):
             script, source = self.labels[label_name]
             emitted.add(label_name)
             self.label(target(label_name))
+            if label_name == "yuri_kill_loop":
+                self.show_y_kill()  # ConditionSwitch re-evaluates live in Ren'Py
             if not nodes(source.block, script, continuation):
                 finish(label_name, script, continuation)
         self.label(done)
@@ -929,7 +933,19 @@ def extend_act2(previous):
     compiler.jump("act1_start")
 
     compiler.label("act3_placeholder")
-    events.append({"op": "say", "speaker_en": "Monika", "text_en": "Act 3 is not part of this pack yet. {glitch=12}"})
+    events.append({"op": "say", "speaker_en": "Monika",
+                   "text_en": "Act 3 is not part of this pack yet. {glitch=12}"})
+    events.append({"op": "choice", "state": SLOT_CHOICE, "count": 2,
+                   "text_en": "Start over from Act 1? This resets Act 2 progress and deletes all saves."})
+    events.append({"op": "choice_option", "value": 0, "text_en": "Start over", "target": "act3_reset"})
+    events.append({"op": "choice_option", "value": 1, "text_en": "Not now", "target": "act3_back"})
+    compiler.label("act3_reset")
+    compiler.set(SLOT_TEMP, 0)
+    for key in ("playthrough", "autoload", "yuri_kill", "special_0", "special_1", "special_2"):
+        events.append({"op": "persistent_store", "state": SLOT_TEMP, "key": PERSIST[key]})
+    events.append({"op": "system", "action": 1})
+    events.append({"op": "system", "action": 3})
+    compiler.label("act3_back")
     events.append({"op": "end", "flags": 0})
 
     # -- Act 2 start (ch10 glitched restart or ch20 from the menu) -----------

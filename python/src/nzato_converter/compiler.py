@@ -511,8 +511,8 @@ def edited_bank_text(text: str) -> str:
     for char in text:
         if char == '{':
             depth += 1
-        if depth or char in '\n\r\t' or ord(char) >= 0x200:
-            out.append(char)
+        if depth or char in ' \n\r\t' or ord(char) >= 0x200:
+            out.append(char)  # ASCII spaces keep the prose word-wrap working
         else:
             out.append(chr(EDITED_BANK + ord(char)))
         if char == '}' and depth:

@@ -764,7 +764,11 @@ void Player::apply(const Event& event) {
       replace_player(speaker_);
       replace_player(text_);
       if (!pack_.glitch_alphabet().empty()) {
-        const uint32_t seed = poem_seed_ ^ static_cast<uint32_t>(cursor_ * 0x9e3779b9u);
+        // Vary the glyphs when the same line repeats (the weekend loop):
+        // story slots change every iteration and replay identically.
+        uint32_t seed = poem_seed_ ^ static_cast<uint32_t>(cursor_ * 0x9e3779b9u);
+        for (size_t slot = 0; slot < story_state_.size(); ++slot)
+          seed = (seed ^ static_cast<uint32_t>(static_cast<uint16_t>(story_state_[slot]))) * 0x01000193u;
         if (speaker_.find("{glitch=") != std::string::npos)
           speaker_ = expand_glitch(speaker_, seed ^ 0x5bd1e995u);
         if (text_.find("{glitch=") != std::string::npos)

@@ -53,12 +53,13 @@ int main(int argc, char** argv) {
       // state: cursor, flags, current speaker/text
       std::string text(player.current_text());
       for (char& c : text) if (c == '\n') c = ' ';
-      std::printf("cursor=%zu title=%d name=%d choice=%d poem=%d ended=%d quit=%d nav=%d text=%s\n",
+      std::printf("cursor=%zu title=%d name=%d choice=%d poem=%d ended=%d quit=%d nav=%d ia=%d sk=%d fx=%d text=%s\n",
                   player.event_index(), player.title_open(), player.name_entry_open(),
                   player.navigation_open() && !player.title_open() && !player.poem_open() &&
                       !player.name_entry_open(),
                   player.poem_open(), player.ended(), player.quit_requested(),
-                  player.navigation_open(), text.c_str());
+                  player.navigation_open(), player.interactive_game(), player.skip_allowed(),
+                  player.effect_active(), text.c_str());
       std::fflush(stdout);
     }
   }

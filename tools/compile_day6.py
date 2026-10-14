@@ -40,7 +40,7 @@ class Day6Compiler(Day5Compiler):
                 self.events.append({"op": "scene", "resource": resource})
             return
         super().linear_node(node, script)
-        if kind(node) == "Say" and node.linenumber == 217:
+        if kind(node) == "Say" and node.linenumber == 217 and script == "script-ch5.rpyc":
             # Mark the existing room-entry line without shifting save cursors.
             self.events[-1]["lock_skip"] = True
 
