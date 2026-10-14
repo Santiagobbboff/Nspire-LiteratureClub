@@ -263,7 +263,7 @@ def bake_act2(raw_dir: Path, resolver: ImageResolver, output_dir: Path,
             region, drops = {("blood",): ((0.25, 0.25, 0.75, 0.95), 60),
                              ("blood_eye",): ((0.42, 0.18, 0.5, 0.45), 14),
                              ("blood_eye2",): ((0.5, 0.18, 0.58, 0.45), 14)}[image_name]
-            add_flat(image_name, procedural_blood(SCENE_SIZE, hash(image_name) & 0xffff, region, drops),
+            add_flat(image_name, procedural_blood(SCENE_SIZE, sum(map(ord, "".join(image_name))), region, drops),
                      "screen_layer")
             continue
         if image_name in N_RECTS:
