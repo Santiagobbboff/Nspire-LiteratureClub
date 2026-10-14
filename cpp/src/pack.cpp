@@ -208,16 +208,15 @@ bool Pack::load_file(void* handle) {
         return fail("invalid story choice");
       for (size_t option = i + 1; option <= i + event.resource; ++option)
         if (static_cast<Op>(event_disks[option].op) != Op::choice_option ||
-            event_disks[option].x < 0 ||
-            static_cast<uint16_t>(event_disks[option].x) >= h.events)
+            event_disks[option].speaker.offset >= h.events)
           return fail("invalid story choice option");
       break;
     case Op::choice_option:
-      if (event.x < 0 || static_cast<uint16_t>(event.x) >= h.events)
+      if (event.speaker.offset >= h.events)
         return fail("invalid story choice target");
       break;
     case Op::jump:
-      if (event.resource >= h.events || event.resource > 32767)
+      if (event.speaker.offset >= h.events)
         return fail("invalid story jump");
       break;
     case Op::set_state:
@@ -225,7 +224,7 @@ bool Pack::load_file(void* handle) {
         return fail("invalid story state slot");
       break;
     case Op::if_state:
-      if (event.resource >= story_state_slots || event.y < 0 || static_cast<uint16_t>(event.y) >= h.events)
+      if (event.resource >= story_state_slots || event.speaker.offset >= h.events)
         return fail("invalid story condition");
       break;
     case Op::add_state:
@@ -233,9 +232,20 @@ bool Pack::load_file(void* handle) {
         return fail("invalid story state slot");
       break;
     case Op::if_state_gt:
-      if (event.resource >= story_state_slots || event.x < 0 || event.x >= story_state_slots || event.y < 0 ||
-          static_cast<uint16_t>(event.y) >= h.events)
+      if (event.resource >= story_state_slots || event.x < 0 || event.x >= story_state_slots ||
+          event.speaker.offset >= h.events)
         return fail("invalid story comparison");
+      break;
+    case Op::persistent_load:
+    case Op::persistent_store:
+      if (event.resource >= story_state_slots || event.x < 0 ||
+          static_cast<size_t>(event.x) >= persistent_value_count)
+        return fail("invalid persistent access");
+      break;
+    case Op::rand_state:
+      if (event.resource >= story_state_slots || event.x < 1 || event.x > 16 ||
+          (event.y >= 0 && event.y >= static_cast<int>(story_state_slots)))
+        return fail("invalid random state");
       break;
     default:
       break;
@@ -294,7 +304,7 @@ bool Pack::load_file(void* handle) {
     if (!(h.flags & 4) || static_cast<uint64_t>(file_size) < offset + sizeof(UiFooter) + sizeof(DdlcUiFooter))
       return fail("truncated DDLC UI metadata");
     DdlcUiFooter footer{};
-    if (!read(f, footer) || std::memcmp(footer.magic, "DDUI", 4) || footer.version != 2)
+    if (!read(f, footer) || std::memcmp(footer.magic, "DDUI", 4) || footer.version != 3)
       return fail("Regenerate the DDLC pack with the current converter");
     const auto valid = [&](uint16_t id) {
       const Image* image = image_metadata(id);
@@ -319,12 +329,39 @@ bool Pack::load_file(void* handle) {
       for (const unsigned char c : word.text)
         if (c < 32 || c > 126) return fail("invalid DDLC poem word text");
     }
+    // Version 3: start event, glitch alphabet, embedded character files.
+    if (!read(f, start_event_) || start_event_ >= h.events)
+      return fail("invalid DDLC start event");
+    uint16_t alphabet_count = 0;
+    if (!read(f, alphabet_count) || alphabet_count > 512)
+      return fail("invalid DDLC glitch alphabet");
+    glitch_alphabet_.resize(alphabet_count);
+    for (auto& cp : glitch_alphabet_)
+      if (!read(f, cp)) return fail("truncated DDLC glitch alphabet");
+    for (auto& blob : character_files_) {
+      uint32_t size = 0;
+      if (!read(f, size) || size > (1U << 20)) return fail("invalid DDLC character file");
+      const uint32_t at = position(f);
+      if (at == UINT32_MAX || std::fseek(f, static_cast<long>(size), SEEK_CUR) != 0)
+        return fail("truncated DDLC character file");
+      blob = {at, size};
+    }
   }
   if (has_poems() && !ddlc_title_id_)
     return fail("DDLC pack needs regeneration with the current converter");
   file_ = f;
   error_ = "";
   return true;
+}
+
+bool Pack::read_character_file(size_t index, std::vector<uint8_t>& out) const {
+  if (index >= character_files_.size() || !file_ || !character_files_[index].size)
+    return false;
+  FILE* f = static_cast<FILE*>(file_);
+  const auto& blob = character_files_[index];
+  out.resize(blob.size);
+  return std::fseek(f, static_cast<long>(blob.offset), SEEK_SET) == 0 &&
+         bytes(f, out.data(), out.size());
 }
 
 bool Pack::image_pinned(uint16_t id) const {

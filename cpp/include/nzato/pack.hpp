@@ -56,8 +56,33 @@ enum class Op : uint8_t {
   add_state = 18,
   if_state_gt = 19,
   move = 20,
-  poem = 21
+  poem = 21,
+  // Act 2 additions (DDUI footer version 3).
+  system = 22,          // resource: 1 delete saves, 2 delete character x, 3 restore characters
+  persistent_load = 23, // story slot `resource` <- persistent key `x`
+  persistent_store = 24,// persistent key `x` <- story slot `resource`
+  effect = 25,          // resource: 0 stop, 1 tear, 2 invert; x duration ms (0 = until stop)
+  rand_state = 26       // story slot `resource` <- random [0, x), excluding bits set in slot `y`
 };
+// Persistent key indices shared with the pack compiler.
+enum class PersistentKey : uint8_t {
+  playthrough = 0,
+  yuri_kill = 1,
+  autoload = 2,
+  special_poem_0 = 3,
+  special_poem_1 = 4,
+  special_poem_2 = 5,
+  seen_eyes = 6,
+  seen_sticker = 7,
+  seen_ghost_menu = 8,
+  deleted_saves = 9,
+  seen_colors_poem = 10,
+  count = 16
+};
+inline constexpr size_t persistent_value_count = static_cast<size_t>(PersistentKey::count);
+inline constexpr size_t character_file_count = 4;
+inline constexpr const char* character_file_names[character_file_count] = {"monika", "natsuki",
+                                                                            "sayori", "yuri"};
 struct TextRef {
   uint32_t offset{}, size{};
 };
@@ -93,6 +118,11 @@ struct Event {
   int16_t x{}, y{};
   TextRef speaker, text;
 };
+// Branch targets of jump/if_state/if_state_gt/choice_option are 32-bit event
+// indices stored in the otherwise unused speaker reference.
+inline size_t branch_target(const Event& event) {
+  return static_cast<size_t>(event.speaker.offset);
+}
 
 class Pack {
 public:
@@ -111,6 +141,14 @@ public:
 #endif
   uint16_t ddlc_title_id() const { return ddlc_title_id_; }
   uint16_t ddlc_notebook_id() const { return ddlc_notebook_id_; }
+  // First story event of a new game (the Act dispatch label), or 0 for the
+  // legacy "first event after the title op" behaviour.
+  uint32_t start_event() const { return start_event_; }
+  const std::vector<uint32_t>& glitch_alphabet() const { return glitch_alphabet_; }
+  // Original character files embedded by the converter; written beside the
+  // pack as characters/<name>.chr.tns. Empty when the pack has none.
+  bool read_character_file(size_t index, std::vector<uint8_t>& out) const;
+  bool has_character_files() const { return character_files_[0].size != 0; }
   const std::array<PoemWord, poem_word_count>& poem_words() const { return poem_words_; }
   const Image* image(uint16_t id) const;
   const Image* image_metadata(uint16_t id) const;
@@ -170,6 +208,9 @@ private:
   void* file_{};
   std::string directory_;
   uint16_t ddlc_title_id_{}, ddlc_notebook_id_{};
+  uint32_t start_event_{};
+  std::vector<uint32_t> glitch_alphabet_;
+  std::array<TextRef, character_file_count> character_files_{};
   std::array<PoemWord, poem_word_count> poem_words_{};
   bool chinese_{};
   bool loose_translation_{};

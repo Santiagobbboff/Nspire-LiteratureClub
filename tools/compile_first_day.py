@@ -284,6 +284,7 @@ def main() -> int:
 
     if not label.block or kind(label.block[-1]) != "Return":
         raise SystemExit("ch0_main ended without its Return; refusing a truncated build")
+    events.append({"op": "label", "name": "act1_start"})
     compile_nodes(label.block, "script-ch0.rpyc", "ch0_main")
 
     # Replace the Ren'Py poem UI with a simple 20-round word selector. Each
@@ -953,6 +954,15 @@ def main() -> int:
             position += 1
     manifest["ddlc"] = {"playable_days": 6, "minimum_choice_capacity": 128,
                          "labels": label_positions}
+    # Act dispatch (compile_act2) decides where a New Game begins; Act 1
+    # event indices stay untouched so older DDS saves still replay.
+    manifest["start_label"] = "act_dispatch"
+    from compile_act2 import GLITCH_ALPHABET
+    manifest["glitch_alphabet"] = GLITCH_ALPHABET
+    manifest["edited_font"] = str((raw_dir / "gui/font/VerilySerifMono.otf").resolve())
+    manifest["character_files"] = [str((raw_dir / f"{name}.chr").resolve())
+                                   if (raw_dir / f"{name}.chr").is_file() else None
+                                   for name in ("monika", "natsuki", "sayori", "yuri")]
     build_pack(
         manifest,
         args.font.resolve(),

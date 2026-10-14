@@ -4,6 +4,11 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#endif
 
 namespace nzato {
 namespace {
@@ -31,6 +36,12 @@ struct PersistentHead {
   char magic[4];
   uint64_t gallery;
 };
+#pragma pack(push, 1)
+struct PersistentValues {
+  char magic[4]; // "DDP3"
+  int16_t values[persistent_value_count];
+};
+#pragma pack(pop)
 
 void append_text(char*& out, char* end, const char* text) {
   while (*text && out < end)
@@ -110,6 +121,10 @@ void Player::load_persistent() {
     uint8_t seen = 0;
     if (ddlc_ui_ && std::fread(&seen, 1, 1, file) == 1 && seen == 1)
       notice_seen_ = true;
+    PersistentValues values{};
+    if (ddlc_ui_ && std::fread(&values, sizeof(values), 1, file) == 1 &&
+        std::memcmp(values.magic, "DDP3", 4) == 0)
+      std::copy(std::begin(values.values), std::end(values.values), persistent_values_.begin());
   }
   std::fclose(file);
 }
@@ -134,8 +149,80 @@ void Player::save_persistent() const {
     std::fwrite(&mode, 1, 1, file);
     const uint8_t seen = notice_seen_ ? 1 : 0;
     std::fwrite(&seen, 1, 1, file);
+    PersistentValues values{};
+    std::memcpy(values.magic, "DDP3", 4);
+    std::copy(persistent_values_.begin(), persistent_values_.end(), std::begin(values.values));
+    std::fwrite(&values, sizeof(values), 1, file);
   }
   std::fclose(file);
+}
+
+void Player::delete_all_saves() {
+  for (int slot = 0; slot < static_cast<int>(saves_.size()); slot++) {
+    char name[512];
+    save_name(name, sizeof(name), pack_.chinese(), ddlc_ui_, slot, pack_.directory());
+    std::remove(name);
+    saves_[slot] = {};
+  }
+  release_save_cache();
+}
+
+namespace {
+void character_path(char* output, size_t size, std::string_view directory, size_t index) {
+  if (!size)
+    return;
+  char* out = output;
+  char* const end = output + size - 1;
+  append_text(out, end, directory);
+  append_text(out, end, "characters/");
+  append_text(out, end, character_file_names[index]);
+#ifdef _WIN32
+  append_text(out, end, ".chr");
+#else
+  append_text(out, end, ".chr.tns");
+#endif
+  *out = '\0';
+}
+void ensure_character_directory(std::string_view directory) {
+  std::string path(directory);
+  path += "characters";
+#ifdef _WIN32
+  _mkdir(path.c_str());
+#else
+  mkdir(path.c_str(), 0755);
+#endif
+}
+} // namespace
+
+void Player::write_character_files() const {
+  if (!pack_.has_character_files())
+    return;
+  ensure_character_directory(pack_.directory());
+  std::vector<uint8_t> blob;
+  for (size_t index = 0; index < character_file_count; ++index) {
+    char name[512];
+    character_path(name, sizeof(name), pack_.directory(), index);
+    FILE* existing = std::fopen(name, "rb");
+    if (existing) {
+      std::fclose(existing);
+      continue;
+    }
+    if (!pack_.read_character_file(index, blob))
+      continue;
+    FILE* file = std::fopen(name, "wb");
+    if (!file)
+      continue;
+    std::fwrite(blob.data(), 1, blob.size(), file);
+    std::fclose(file);
+  }
+}
+
+void Player::delete_character_file(size_t index) const {
+  if (index >= character_file_count)
+    return;
+  char name[512];
+  character_path(name, sizeof(name), pack_.directory(), index);
+  std::remove(name);
 }
 
 void Player::load_save_index() {
@@ -308,6 +395,10 @@ void Player::start_new_game() {
     cursor_++;
   if (cursor_ < pack_.events().size())
     cursor_++;
+  if (pack_.start_event() && pack_.start_event() < pack_.events().size())
+    cursor_ = pack_.start_event();
+  effect_kind_ = 0;
+  effect_left_ = effect_elapsed_ = 0;
   title_active_ = video_active_ = false;
   advance_automatic();
   particle_accumulator_ = 0;
@@ -410,6 +501,8 @@ bool Player::restore_to(size_t target, int save_slot) {
     cursor_++;
   if (cursor_ < pack_.events().size())
     cursor_++;
+  if (pack_.start_event() && pack_.start_event() < pack_.events().size())
+    cursor_ = pack_.start_event();
   replaying_ = true;
   size_t replay_budget = pack_.events().size() * 4;
   while (cursor_ != target) {

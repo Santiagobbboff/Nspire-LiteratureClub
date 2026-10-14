@@ -95,6 +95,13 @@ Player::Player(const Pack& p, bool play_intro, uint16_t* video_framebuffer)
   reset();
   load_persistent();
   if (ddlc_ui_ && !notice_seen_) startup_phase_ = StartupPhase::notice;
+  // DDLC's persistent.autoload: Act 2's weekend and the Act 3 handoff resume
+  // the story on launch instead of showing the main menu.
+  if (ddlc_ui_ && notice_seen_ && pack_.start_event() &&
+      persistent_value(PersistentKey::autoload) != 0) {
+    start_new_game();
+    screen_fade_left_ = 240;
+  }
 }
 
 uint32_t Player::transition_ms(uint8_t flags) {
@@ -123,6 +130,8 @@ void Player::reset() {
   language_ = pack_.chinese() ? Language::chinese : Language::english;
   cursor_ = 0;
   story_state_.fill(-1);
+  effect_kind_ = 0;
+  effect_left_ = effect_elapsed_ = 0;
   ended_ = false;
   background_ = nullptr;
   background_resource_ = 0;
@@ -481,10 +490,10 @@ void Player::apply(const Event& event) {
           continue;
         const Event& option = pack_.events()[choice_first_ + choice_history_[i].option];
         if (option.op == Op::choice_option && event.x >= 0 &&
-            event.x < static_cast<int>(story_state_.size()) && option.x >= 0) {
+            event.x < static_cast<int>(story_state_.size())) {
           story_state_[event.x] = static_cast<int16_t>(option.resource);
-          if (!apply_random_word(choice_history_[i].option, static_cast<size_t>(option.x)))
-            cursor_ = static_cast<size_t>(option.x);
+          if (!apply_random_word(choice_history_[i].option, branch_target(option)))
+            cursor_ = branch_target(option);
           choice_open_ = false;
           return;
         }
@@ -510,7 +519,7 @@ void Player::apply(const Event& event) {
   case Op::choice_option:
     break;
   case Op::jump:
-    cursor_ = event.resource;
+    cursor_ = branch_target(event);
     break;
   case Op::set_state:
     if (event.resource < story_state_.size())
@@ -521,16 +530,74 @@ void Player::apply(const Event& event) {
       story_state_[event.resource] = static_cast<int16_t>(story_state_[event.resource] + event.x);
     break;
   case Op::if_state:
-    if (event.resource < story_state_.size() && story_state_[event.resource] == event.x &&
-        event.y >= 0)
-      cursor_ = static_cast<size_t>(event.y);
+    if (event.resource < story_state_.size() && story_state_[event.resource] == event.x)
+      cursor_ = branch_target(event);
     break;
   case Op::if_state_gt:
     if (event.resource < story_state_.size() && event.x >= 0 &&
         event.x < static_cast<int>(story_state_.size()) &&
-        story_state_[event.resource] > story_state_[event.x] && event.y >= 0)
-      cursor_ = static_cast<size_t>(event.y);
+        story_state_[event.resource] > story_state_[event.x])
+      cursor_ = branch_target(event);
     break;
+  case Op::persistent_load:
+    if (event.resource < story_state_.size() && event.x >= 0 &&
+        static_cast<size_t>(event.x) < persistent_values_.size())
+      story_state_[event.resource] = persistent_values_[static_cast<size_t>(event.x)];
+    break;
+  case Op::persistent_store:
+    if (!replaying_ && event.resource < story_state_.size() && event.x >= 0 &&
+        static_cast<size_t>(event.x) < persistent_values_.size()) {
+      persistent_values_[static_cast<size_t>(event.x)] = story_state_[event.resource];
+      save_persistent();
+    }
+    break;
+  case Op::system:
+    if (replaying_)
+      break;
+    if (event.resource == 1)
+      delete_all_saves();
+    else if (event.resource == 2)
+      delete_character_file(static_cast<size_t>(event.x));
+    else if (event.resource == 3)
+      write_character_files();
+    break;
+  case Op::effect:
+    if (replaying_)
+      break;
+    effect_kind_ = static_cast<uint8_t>(event.resource);
+    effect_left_ = event.x > 0 ? static_cast<uint32_t>(event.x) : 0;
+    effect_elapsed_ = 0;
+    effect_param_ = event.y;
+    effect_seed_ = (poem_seed_ ^ static_cast<uint32_t>(cursor_ * 0x9e3779b9u)) | 1U;
+    stage_cache_valid_ = false;
+    break;
+  case Op::rand_state: {
+    if (event.resource >= story_state_.size() || event.x < 1)
+      break;
+    // Deterministic per story position so save replay reproduces the draw.
+    uint32_t rng = (poem_seed_ ^ static_cast<uint32_t>(cursor_ * 0x9e3779b9u)) | 1U;
+    for (int i = 0; i < 4; ++i) {
+      rng ^= rng << 13;
+      rng ^= rng >> 17;
+      rng ^= rng << 5;
+    }
+    const int count = event.x;
+    int16_t* mask = event.y >= 0 && static_cast<size_t>(event.y) < story_state_.size()
+                        ? &story_state_[static_cast<size_t>(event.y)]
+                        : nullptr;
+    int candidates[16];
+    int available = 0;
+    for (int value = 0; value < count && value < 16; ++value)
+      if (!mask || !(*mask & (1 << value)))
+        candidates[available++] = value;
+    if (!available)
+      break;
+    const int chosen = candidates[rng % static_cast<uint32_t>(available)];
+    story_state_[event.resource] = static_cast<int16_t>(chosen);
+    if (mask)
+      *mask = static_cast<int16_t>(*mask | (1 << chosen));
+    break;
+  }
   case Op::scene:
     previous_background_ = nullptr;
     background_ = image_for_event(event.resource);
@@ -696,6 +763,13 @@ void Player::apply(const Event& event) {
       };
       replace_player(speaker_);
       replace_player(text_);
+      if (!pack_.glitch_alphabet().empty()) {
+        const uint32_t seed = poem_seed_ ^ static_cast<uint32_t>(cursor_ * 0x9e3779b9u);
+        if (speaker_.find("{glitch=") != std::string::npos)
+          speaker_ = expand_glitch(speaker_, seed ^ 0x5bd1e995u);
+        if (text_.find("{glitch=") != std::string::npos)
+          text_ = expand_glitch(text_, seed);
+      }
       if (nvl_mode_ && !centered_) {
         if (!nvl_text_.empty())
           nvl_text_ += "\n\n";
@@ -847,7 +921,7 @@ void Player::apply(const Event& event) {
   }
   case Op::pause:
     waiting_ = true;
-    wait_left_ = event.x > 0 ? static_cast<uint32_t>(event.x) : 1;
+    wait_left_ = event.x > 0 ? static_cast<uint32_t>(event.x) : event.x < 0 ? wait_for_input : 1;
     if (event.flags & 0x40) {
       speaker_.clear();
       text_.clear();
@@ -1203,13 +1277,24 @@ bool Player::tick(uint32_t elapsed_ms) {
     advance_automatic();
     return true;
   }
+  if (effect_kind_) {
+    effect_elapsed_ += elapsed_ms;
+    if (effect_left_) {
+      if (elapsed_ms >= effect_left_) {
+        effect_left_ = 0;
+        effect_kind_ = 0;
+      } else
+        effect_left_ -= elapsed_ms;
+    }
+    changed = true;
+  }
   if (waiting_) {
-    if (elapsed_ms >= wait_left_) {
+    if (wait_left_ != wait_for_input && elapsed_ms >= wait_left_) {
       waiting_ = false;
       wait_left_ = 0;
       advance_automatic();
       return true;
-    } else
+    } else if (wait_left_ != wait_for_input)
       wait_left_ -= elapsed_ms;
     return changed;
   }
@@ -1379,6 +1464,97 @@ bool Player::advance() {
 } // namespace nzato
 
 namespace nzato {
+std::string Player::expand_glitch(std::string_view text, uint32_t seed) const {
+  const auto& alphabet = pack_.glitch_alphabet();
+  std::string out;
+  out.reserve(text.size() + 64);
+  uint32_t rng = seed | 1U;
+  size_t at = 0;
+  while (at < text.size()) {
+    constexpr std::string_view marker = "{glitch=";
+    const size_t open = text.find(marker, at);
+    if (open == std::string_view::npos) {
+      out.append(text.substr(at));
+      break;
+    }
+    out.append(text.substr(at, open - at));
+    const size_t close = text.find('}', open);
+    if (close == std::string_view::npos) {
+      out.append(text.substr(open));
+      break;
+    }
+    int count = 0;
+    for (size_t i = open + marker.size(); i < close; ++i)
+      if (text[i] >= '0' && text[i] <= '9')
+        count = count * 10 + (text[i] - '0');
+    count = std::min(count, 200);
+    for (int i = 0; i < count && !alphabet.empty(); ++i) {
+      rng ^= rng << 13;
+      rng ^= rng >> 17;
+      rng ^= rng << 5;
+      uint32_t cp = alphabet[rng % alphabet.size()];
+      // UTF-8 encode (the alphabet is below U+0800).
+      if (cp < 0x80)
+        out.push_back(static_cast<char>(cp));
+      else if (cp < 0x800) {
+        out.push_back(static_cast<char>(0xC0 | (cp >> 6)));
+        out.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+      } else {
+        out.push_back(static_cast<char>(0xE0 | (cp >> 12)));
+        out.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+        out.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+      }
+    }
+    at = close + 1;
+  }
+  return out;
+}
+
+void Player::screen_effects(uint16_t* dst) const {
+  if (!effect_kind_)
+    return;
+  if (effect_kind_ == 2) {
+    for (int i = 0; i < screen_w * screen_h; ++i)
+      dst[i] = static_cast<uint16_t>(~dst[i]);
+    return;
+  }
+  if (effect_kind_ != 1)
+    return;
+  // Screen tear: the frame is cut into horizontal pieces which flicker
+  // sideways on their own on/off periods (effects.rpy's Tear displayable).
+  const int pieces = std::clamp(effect_param_ & 0xff, 1, 24);
+  const int max_offset = std::clamp((effect_param_ >> 8) & 0xff, 1, 160);
+  uint32_t rng = effect_seed_;
+  auto next = [&rng]() {
+    rng ^= rng << 13;
+    rng ^= rng >> 17;
+    rng ^= rng << 5;
+    return rng;
+  };
+  int cuts[26];
+  cuts[0] = 0;
+  for (int i = 1; i <= pieces; ++i)
+    cuts[i] = 10 + static_cast<int>(next() % (screen_h - 20));
+  cuts[pieces + 1] = screen_h;
+  std::sort(cuts, cuts + pieces + 2);
+  static uint16_t row_copy[screen_w];
+  for (int piece = 0; piece <= pieces; ++piece) {
+    const uint32_t off_time = 200 + next() % 200, on_time = 200 + next() % 200;
+    const uint32_t phase = (effect_elapsed_ + next() % 400) % (off_time + on_time);
+    const int offset = static_cast<int>(next() % (2 * max_offset + 1)) - max_offset;
+    if (phase <= off_time || !offset)
+      continue;
+    for (int y = cuts[piece]; y < cuts[piece + 1] && y < screen_h; ++y) {
+      uint16_t* row = dst + y * screen_w;
+      std::memcpy(row_copy, row, sizeof(row_copy));
+      for (int x = 0; x < screen_w; ++x) {
+        const int source = x - offset;
+        row[x] = source >= 0 && source < screen_w ? row_copy[source] : 0;
+      }
+    }
+  }
+}
+
 int Player::word_menu_page(size_t menu_event) const {
   if (!ddlc_ui_ || menu_event >= pack_.events().size()) return 0;
   const auto& menu = pack_.events()[menu_event];
@@ -1419,10 +1595,10 @@ bool Player::apply_random_word(uint8_t option, size_t target) {
     if (add.op != Op::add_state || add.resource != 3+i) return false;
   }
   const auto& jump = pack_.events()[target+3];
-  if (jump.op != Op::jump || jump.resource >= pack_.events().size()) return false;
+  if (jump.op != Op::jump || branch_target(jump) >= pack_.events().size()) return false;
   const auto& word = pack_.poem_words()[word_board_[(page-1)*10+option]];
   for (unsigned i=0; i<3; ++i) story_state_[3+i] += word.points[i];
-  cursor_ = jump.resource;
+  cursor_ = branch_target(jump);
   return true;
 }
 } // namespace nzato

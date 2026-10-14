@@ -16,9 +16,15 @@ class Day6Compiler(Day5Compiler):
             call = ast.parse(source).body[0].value
             seconds = ast.literal_eval(call.args[0])
             self.events.append({"op": "pause", "duration_ms": round(seconds * 1000)})
-        elif source.startswith(("persistent.playthrough =", "persistent.anticheat =",
-                                "delete_character(", "in_sayori_kill =", "try: sys.modules")):
-            # No file deletion, actual crashes or Act 2 persistent progression.
+        elif source == "persistent.playthrough = 1":
+            # Act 1 finale: unlock Act 2 for the next New Game (DDUI v3 packs).
+            self.set(8, 1)
+            self.events.append({"op": "persistent_store", "state": 8, "key": 0})
+        elif source == 'delete_character("sayori")':
+            self.events.append({"op": "system", "action": 2, "arg": 2})
+        elif source.startswith(("persistent.anticheat =", "delete_character(",
+                                "in_sayori_kill =", "try: sys.modules")):
+            # No actual crashes; other persistent values are not modelled.
             self.report_skip("Act 1 finale persistent/filesystem simulation")
         else:
             super().python(node)
@@ -67,3 +73,5 @@ def extend_day6(previous):
     compiler.invoke("ch5_main")
     compiler.label("act1_credits")
     compiler.events.append({"op": "end", "flags": 2})
+    from compile_act2 import extend_act2
+    extend_act2(compiler)

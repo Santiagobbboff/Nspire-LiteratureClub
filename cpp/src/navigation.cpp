@@ -400,8 +400,7 @@ bool Player::input_confirm() {
       }
     if (!recorded && choice_history_count_ < choice_history_.size())
       choice_history_[choice_history_count_++] = {menu_event, choice_selection_};
-    const size_t target = option.x < 0 ? pack_.events().size()
-                                      : static_cast<size_t>(option.x);
+    const size_t target = branch_target(option);
     if (target >= pack_.events().size())
       return true;
     choice_open_ = false;

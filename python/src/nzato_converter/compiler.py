@@ -332,8 +332,8 @@ def image_record(
     if kind in ("poem_paper", "ddlc_ui_image"):
         rgba = src
         coverage, flags = b"", 0
-    elif kind == "background":
-        target = (320, 180)
+    elif kind in ("background", "fullscreen_background"):
+        target = (320, 180) if kind == "background" else (320, 240)
         rgba = resize_rgba(src, target, Image.Resampling.BOX)
         flat = Image.new("RGB", rgba.size)
         flat.paste(rgba.convert("RGB"), mask=rgba.getchannel("A"))
@@ -500,6 +500,45 @@ def image_record(
         crop_y,
     )
 
+EDITED_BANK = 0xEA00
+
+
+def edited_bank_text(text: str) -> str:
+    """Map Act 2 'edited' dialogue into the VerilySerifMono glyph bank.
+    Text inside {tags} (including {player}/{glitch=N}) stays in the prose font."""
+    out = []
+    depth = 0
+    for char in text:
+        if char == '{':
+            depth += 1
+        if depth or char in '\n\r\t' or ord(char) >= 0x200:
+            out.append(char)
+        else:
+            out.append(chr(EDITED_BANK + ord(char)))
+        if char == '}' and depth:
+            depth -= 1
+    return ''.join(out)
+
+
+def bank_glyph_records(font_path, base, size, chars, gamma=0.64):
+    """Rasterize `chars` from `font_path` at `size` into the private bank `base`."""
+    records = []
+    font = ImageFont.truetype(str(font_path), size)
+    ascent, descent = font.getmetrics()
+    for char in sorted(set(chars) - set('\n\r\t')):
+        box = font.getbbox(char, anchor='ls')
+        left = max(0, -box[0])
+        advance = max(1, min(30, round(font.getlength(char))))
+        width, height = max(1, min(30, max(advance, box[2] + left))), min(24, ascent + descent)
+        canvas = Image.new('L', (width, height))
+        ImageDraw.Draw(canvas).text((left, ascent), char, font=font, fill=255, anchor='ls')
+        canvas = canvas.point([round(255 * (v / 255) ** gamma) for v in range(256)])
+        pixels = canvas.tobytes()
+        records.append(struct.pack('<IBBBBH', (base + ord(char)) | (size << 24),
+                                   width, height, advance, (-left) & 0xFF, len(pixels)) + pixels)
+    return records
+
+
 def poem_glyph_records(fonts):
     """Package only the used poem glyphs, without shipping full font files."""
     records = []
@@ -658,11 +697,17 @@ def build_pack(
                     raise ValueError(f"unknown story label {target!r} in {op}")
                 target = labels[target]
             target = int(target)
-            if not 0 <= target < len(runtime_events) or target > 32767:
+            if not 0 <= target < len(runtime_events):
                 raise ValueError(f"story target out of range in {op}: {target}")
             event["target_index"] = target
-    if len(runtime_events) > 32768:
-        raise ValueError("story event stream exceeds the 15-bit branch target limit")
+    if len(runtime_events) > 0x7FFFFFFF:
+        raise ValueError("story event stream exceeds the 32-bit branch target limit")
+    start_label = manifest.get("start_label")
+    start_event = 0
+    if start_label:
+        if start_label not in labels:
+            raise ValueError(f"unknown start label {start_label!r}")
+        start_event = labels[start_label]
     option_indices: set[int] = set()
     for index, event in enumerate(runtime_events):
         op = event.get("op")
@@ -679,8 +724,13 @@ def build_pack(
                 option_indices.add(option_index)
         elif op == "choice_option" and index not in option_indices:
             raise ValueError(f"orphan choice option at event {index}")
-        elif op in {"set_state", "add_state", "if_state", "if_state_gt"} and not 0 <= int(event.get("state", 0)) < 16:
+        elif op in {"set_state", "add_state", "if_state", "if_state_gt", "persistent_load",
+                    "persistent_store", "rand_state"} and not 0 <= int(event.get("state", 0)) < 16:
             raise ValueError(f"invalid state slot at event {index}")
+        if op in {"persistent_load", "persistent_store"} and not 0 <= int(event.get("key", 0)) < 16:
+            raise ValueError(f"invalid persistent key at event {index}")
+        if op == "rand_state" and not 1 <= int(event.get("count", 0)) <= 16:
+            raise ValueError(f"invalid random range at event {index}")
         if op == "if_state_gt" and not 0 <= int(event.get("other_state", 0)) < 16:
             raise ValueError(f"invalid comparison state slot at event {index}")
     manifest["events"] = runtime_events
@@ -786,6 +836,8 @@ def build_pack(
             base = {'sayori': 0xE200, 'natsuki': 0xE400,
                     'yuri': 0xE600, 'monika': 0xE800}[event['author']]
             text = ''.join(c if c in '\n\r\t' else chr(base + ord(c)) for c in text)
+        elif event.get('op') == 'say' and event.get('edited'):
+            text = edited_bank_text(text)
         compiled_texts[event_index] = text
     ui_texts = manifest.get("ui", {}).get(f"texts_{suffix}", {})
     if set(ui_texts) != set(UI_TEXT_KEYS):
@@ -834,8 +886,18 @@ def build_pack(
         chinese_font=language == "zh",
     )
     glyphs = [g for g in glyphs
-              if not 0xE200 <= (struct.unpack_from('<I', g)[0] & 0xFFFFFF) < 0xEA00]
+              if not 0xE200 <= (struct.unpack_from('<I', g)[0] & 0xFFFFFF) < 0xEB00]
     glyphs.extend(poem_glyph_records(manifest.get('poem_fonts', [])))
+    glitch_alphabet = str(manifest.get("glitch_alphabet", ""))
+    if glitch_alphabet:
+        for size in (PROSE_FONT_SIZE, PROSE_FONT_SIZE - 1):
+            glyphs.extend(bank_glyph_records(font, 0, size, glitch_alphabet, 0.58))
+    edited_font = manifest.get("edited_font")
+    if edited_font:
+        edited_chars = ''.join(chr(ord(c) - EDITED_BANK) for text in compiled_texts.values()
+                               for c in text if EDITED_BANK <= ord(c) < EDITED_BANK + 0x100)
+        glyphs.extend(bank_glyph_records(edited_font, EDITED_BANK, PROSE_FONT_SIZE,
+                                         edited_chars + ' ', 0.58))
     # Poem font sizes above the prose range need whitespace metrics too.
     space_sizes = set()
     for spec in manifest.get('poem_fonts', []):
@@ -879,6 +941,11 @@ def build_pack(
         "if_state_gt": 19,
         "move": 20,
         "poem": 21,
+        "system": 22,
+        "persistent_load": 23,
+        "persistent_store": 24,
+        "effect": 25,
+        "rand_state": 26,
     }
     say_sizes: dict[int, int] = {}
     index = 0
@@ -924,6 +991,8 @@ def build_pack(
             elif actual_kinds[name] == "background":
                 x = 0
                 y = 30 if name in {"zatotitle", "ep1", "ep2", "ep3"} else 20
+            elif actual_kinds[name] == "fullscreen_background":
+                x, y = 0, 0
             elif actual_kinds[name] in ("screen_layer", "fullscreen_layer"):
                 x, y = 0, 20
             elif actual_kinds[name] == "prescaled_sprite":
@@ -959,7 +1028,21 @@ def build_pack(
             x = event['font_size']
             y = event['line_height']
         elif event["op"] == "pause":
+            x = max(-1, min(32767, int(event.get("duration_ms", 0))))
+        elif event["op"] == "system":
+            resource = int(event.get("action", 0))
+            x = int(event.get("arg", 0))
+        elif event["op"] in ("persistent_load", "persistent_store"):
+            resource = int(event.get("state", 0))
+            x = int(event.get("key", 0))
+        elif event["op"] == "effect":
+            resource = int(event.get("kind", 0))
             x = min(32767, int(event.get("duration_ms", 0)))
+            y = int(event.get("param", 0))
+        elif event["op"] == "rand_state":
+            resource = int(event.get("state", 0))
+            x = int(event.get("count", 1))
+            y = int(event.get("mask_state", -1))
         elif event["op"] == "window":
             x = 1 if event.get("visible") else 0
         elif event["op"] == "nvl":
@@ -985,24 +1068,22 @@ def build_pack(
             x = int(event.get("state", 0))
         elif event["op"] == "choice_option":
             resource = int(event.get("value", 0))
-            x = event["target_index"]
-        elif event["op"] == "jump":
-            resource = event["target_index"]
         elif event["op"] == "set_state":
             resource = int(event.get("state", 0))
             x = int(event.get("value", 0))
         elif event["op"] == "if_state":
             resource = int(event.get("state", 0))
             x = int(event.get("value", 0))
-            y = event["target_index"]
         elif event["op"] == "add_state":
             resource = int(event.get("state", 0))
             x = int(event.get("value", 0))
         elif event["op"] == "if_state_gt":
             resource = int(event.get("state", 0))
             x = int(event.get("other_state", 0))
-            y = event["target_index"]
         speaker_ref = ref(str(event.get(f"speaker_{suffix}", "")))
+        if event["op"] in ("choice_option", "jump", "if_state", "if_state_gt"):
+            # 32-bit branch targets live in the unused speaker reference.
+            speaker_ref = (int(event["target_index"]), 0)
         if event["op"] in ("show", "scene") and event.get("behind"):
             speaker_ref = (
                 resource_ids.get(str(event["behind"]), 0),
@@ -1054,7 +1135,7 @@ def build_pack(
     glyph_payloads = b"".join(record[glyph_head_size:] for record in glyphs)
     ddlc_footer = b""
     if manifest.get("ddlc_ui"):
-        ddlc_footer = struct.pack("<4sHHH", b"DDUI", 2,
+        ddlc_footer = struct.pack("<4sHHH", b"DDUI", 3,
                                  resource_ids[manifest["ddlc_ui"]["title"]],
                                  resource_ids[manifest["ddlc_ui"]["notebook"]])
         words = manifest.get("poem_words", [])
@@ -1068,6 +1149,12 @@ def build_pack(
                     or len(points) != 3 or any(type(p) is not int or p not in (1, 2, 3) for p in points)):
                 raise ValueError("Invalid local poem word or scores")
             ddlc_footer += struct.pack("<BBBB", len(word), *points) + word
+        ddlc_footer += struct.pack("<I", start_event)
+        alphabet = [ord(c) for c in str(manifest.get("glitch_alphabet", ""))]
+        ddlc_footer += struct.pack("<H", len(alphabet)) + b"".join(struct.pack("<I", cp) for cp in alphabet)
+        for path in manifest.get("character_files", [None] * 4)[:4] + [None] * (4 - len(manifest.get("character_files", []))):
+            blob = Path(path).read_bytes() if path else b""
+            ddlc_footer += struct.pack("<I", len(blob)) + blob
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(
         header

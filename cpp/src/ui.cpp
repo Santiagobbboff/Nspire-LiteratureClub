@@ -1264,6 +1264,7 @@ void Player::render(uint16_t* dst) const {
   auto_icon();
   shake();
   capture_game();
+  screen_effects(dst);
   screen_fade();
   confirm();
 }
