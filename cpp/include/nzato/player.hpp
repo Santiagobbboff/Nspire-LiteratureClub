@@ -138,6 +138,8 @@ public:
     return persistent_values_[static_cast<size_t>(key)];
   }
   bool effect_active() const { return effect_kind_ != 0; }
+  const std::array<int16_t, story_state_slots>& story_state() const { return story_state_; }
+  const std::array<int16_t, persistent_value_count>& persistent_values() const { return persistent_values_; }
 
 private:
   enum class StartupPhase : uint8_t { none, notice, fade_to_white, fade_to_menu };

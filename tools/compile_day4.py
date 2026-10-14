@@ -31,6 +31,7 @@ class Day4Compiler:
         self.replacements = replacements
         self.report_skip = report_skip
         self.serial = 0
+        self.pending_clear = []
         self.chapter = 3
         self.possible = {k: {v} for k, v in visible.items()}
         self.domains = {0: (0, 1, 2), 14: (0, 1, 2), 6: (0, 1, 2),
@@ -265,7 +266,13 @@ class Day4Compiler:
                 self.jump(done)
             self.label(done)
         else:
+            start = len(self.events)
             self.linear([node], script, "Day 4")
+            if k == "Say" and self.pending_clear:
+                for event in self.events[start:]:
+                    if event.get("op") == "say" and "clear_cg" not in event:
+                        event["clear_cg"] = self.pending_clear.pop(0)
+                        break
         if k == "Scene":
             self.possible.clear()
         elif char and char in self.visible:
@@ -307,9 +314,10 @@ class Day4Compiler:
                                 "value": 2 if source[0] == "n" else 4})
         elif source in ("ch4_name = ch4_scene.capitalize()", "currentpos = get_pos()") :
             pass  # Substitution is dispatched from the saved festival route.
-        elif source.startswith(('nextscene = "m_"', "persistent.clear[", "renpy.save_persistent()",
-                                "pause(")):
-            self.report_skip("Day 4 poem dispatch metadata/persistent gallery/visual pause")
+        elif source.startswith("persistent.clear["):
+            self.pending_clear.append(int(source.split("[")[1].split("]")[0]))
+        elif source.startswith(('nextscene = "m_"', "renpy.save_persistent()", "pause(")):
+            self.report_skip("Day 4 poem dispatch metadata/visual pause")
         else:
             raise ValueError(f"unsupported Day 4 Python at {node.linenumber}: {source}")
 

@@ -368,3 +368,5 @@ def extend_act3(previous):
     events.append({"op": "end", "flags": 0})
     speakers["m"] = "Monika"
     compiler.replacements["m_name"] = "Monika"
+    from compile_act4 import extend_act4
+    extend_act4(compiler)

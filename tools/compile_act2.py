@@ -945,29 +945,13 @@ def extend_act2(previous):
     for value, target in ((1, "act2_autoload_kill1"), (2, "act2_autoload_kill2"),
                           (3, "act2_autoload_kill3"), (4, "act3_start"), (5, "act3_entry_5"),
                           (6, "act3_entry_6"), (7, "act3_entry_7"), (8, "act3_entry_8"),
-                          (9, "act3_entry_9")):
+                          (9, "act3_entry_9"), (10, "act4_credits"), (11, "act4_postcredits")):
         events.append({"op": "if_state", "state": SLOT_TEMP, "value": value, "target": target})
     events.append({"op": "persistent_load", "state": SLOT_TEMP, "key": PERSIST["playthrough"]})
     for value, target in ((1, "act2_ch10"), (2, "act2_ch20"), (3, "act3_start"),
-                          (4, "act4_placeholder")):
+                          (4, "act4_start")):
         events.append({"op": "if_state", "state": SLOT_TEMP, "value": value, "target": target})
     compiler.jump("act1_start")
-
-    compiler.label("act4_placeholder")
-    events.append({"op": "say", "speaker_en": "Sayori",
-                   "text_en": "Act 4 is not part of this pack yet. {glitch=12}"})
-    events.append({"op": "choice", "state": SLOT_CHOICE, "count": 2,
-                   "text_en": "Start over from Act 1? This resets all progress and deletes all saves."})
-    events.append({"op": "choice_option", "value": 0, "text_en": "Start over", "target": "act4_reset"})
-    events.append({"op": "choice_option", "value": 1, "text_en": "Not now", "target": "act4_back"})
-    compiler.label("act4_reset")
-    compiler.set(SLOT_TEMP, 0)
-    for key in range(32):
-        events.append({"op": "persistent_store", "state": SLOT_TEMP, "key": key})
-    events.append({"op": "system", "action": 1})
-    events.append({"op": "system", "action": 3})
-    compiler.label("act4_back")
-    events.append({"op": "end", "flags": 0})
 
     # -- Act 2 start (ch10 glitched restart or ch20 from the menu) -----------
     for entry, label in (("act2_ch10", "ch10_main"), ("act2_ch20", "ch20_main")):

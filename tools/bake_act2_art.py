@@ -39,6 +39,18 @@ ACT2_LABELS: dict[str, set[str] | None] = {
     "script-ch30.rpyc": None,
     "script-ch40.rpyc": None,
 }
+# Credits art shown through expressions the collector cannot follow: baked explicitly.
+EXPLICIT_BACKGROUNDS = {
+    **{(f"credits_cg{n}",): f"images/cg/credits/{n}.png" for n in range(1, 11)},
+    ("notfound",): "images/menu/notfound.png",
+    **{(f"end_glitch{n}",): f"images/bg/end-glitch{n}.jpg" for n in range(1, 5)},
+}
+EXPLICIT_FULLSCREEN = {
+    ("credits_logo",): ("gui/logo.png", (0, 0, 0, 255), 0.6),
+    ("credits_ts",): ("images/bg/splash-white.png", (0, 0, 0, 255), 0.65),
+    ("poem_end",): ("images/poem_special/poem_end.png", (255, 255, 255, 255), 1.0),
+    ("poem_end_clearall",): ("images/poem_special/poem_end_clearall.png", (0, 0, 0, 255), 1.0),
+}
 # Act 3 room: the window layers, the room and its highlight flattened into one background.
 COMPOSITES = {
     ("monika_bg",): ("images/cg/monika/mask_3.png", "images/cg/monika/mask_2.png",
@@ -259,6 +271,37 @@ def bake_act2(raw_dir: Path, resolver: ImageResolver, output_dir: Path,
                                (round(px - anchor_x * art.width), round(py - anchor_y * art.height)))
         return canvas
 
+    for image_name, rel_path in EXPLICIT_BACKGROUNDS.items():
+        if image_name in existing:
+            continue
+        source = Path(raw_dir / rel_path)
+        if not source.is_file():
+            source = next(Path(raw_dir).glob(rel_path.rsplit(".", 1)[0] + ".*"), None)
+        if source is None:
+            unresolved.append({"kind": "background", "image": list(image_name)})
+            continue
+        art = Image.open(source).convert("RGB")
+        if art.height > art.width * 9 // 16 + 2:  # the 1280x1280 glitch tiles: keep the top band
+            art = art.crop((0, 0, art.width, art.width * 9 // 16))
+        flat = art.resize(SCENE_SIZE, Image.Resampling.LANCZOS)
+        ident = counters.setdefault("background", 1000)
+        counters["background"] += 1
+        filename = f"bg_{ident:03d}_{SAFE.sub('_', '_'.join(image_name))}.png"
+        flat.save(img_dir / filename)
+        resources.append({"kind": "background", "image": list(image_name), "id": ident,
+                          "file": filename, "width": flat.width, "height": flat.height,
+                          "introduced_act": 4})
+        existing.add(image_name)
+    for image_name, (rel_path, backdrop, zoom) in EXPLICIT_FULLSCREEN.items():
+        if image_name in existing:
+            continue
+        art = Image.open(raw_dir / rel_path).convert("RGBA")
+        canvas = Image.new("RGBA", SCREEN_SIZE, backdrop)
+        ratio = min(SCREEN_SIZE[0] / art.width, SCREEN_SIZE[1] / art.height) * zoom
+        size = (max(1, round(art.width * ratio)), max(1, round(art.height * ratio)))
+        canvas.alpha_composite(art.resize(size, Image.Resampling.LANCZOS),
+                               ((SCREEN_SIZE[0] - size[0]) // 2, (SCREEN_SIZE[1] - size[1]) // 2))
+        add_flat(image_name, canvas.convert("RGB"), "fullscreen_background", 0)
     for image_name in sorted(overlays):
         if image_name in FILL_LAYERS:
             if (*image_name, "layer") not in existing:

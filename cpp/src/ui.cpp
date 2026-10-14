@@ -191,7 +191,7 @@ void Player::render(uint16_t* dst) const {
       const auto line = credits.substr(start, end - start);
       // During the final hold retain only the requested closing card.
       if (roll_ms < credits_scroll_ms || y >= 40) {
-        const uint16_t color = line == "act 2 coming soon?" ? 0xFBD7 : 0xFFFF;
+        const uint16_t color = line == "Thank you for playing." ? 0xFBD7 : 0xFFFF;
         draw_text_centered(dst, pack_, line, line, 160, y, 308, color, leading, font_size);
       }
       y += leading;

@@ -20,7 +20,7 @@ from typing import Any
 
 from PIL import Image
 
-from rpyc_ast import flatten, kind, load_rpyc
+from rpyc_ast import flatten, kind, load_rpyc, pycode_source
 
 CHARACTERS = {"s": "sayori", "n": "natsuki", "y": "yuri", "m": "monika"}
 SPEAKERS = {
@@ -122,6 +122,7 @@ def main() -> int:
     skipped: dict[str, int] = {}
     unknown_vars: set[str] = set()
     ended = False
+    pending_clear: list[int] = []  # persistent.clear[k] waiting for the next dialogue line
 
     def report_skip(reason: str) -> None:
         skipped[reason] = skipped.get(reason, 0) + 1
@@ -277,9 +278,17 @@ def main() -> int:
                     "op": "say", "speaker_en": SPEAKERS.get(who, ""), "text_en": text,
                     "script": script_file, "line": int(getattr(node, "linenumber", 0)),
                 })
+                if pending_clear:
+                    events[-1]["clear_cg"] = pending_clear.pop(0)
             elif node_kind == "Return":
                 return
-            elif node_kind in {"With", "Python", "UserStatement", "Pass"}:
+            elif node_kind == "Python":
+                source = (pycode_source(node.code) or "").strip()
+                clear = re.fullmatch(r"persistent\.clear\[(\d+)\] = True", source)
+                if clear:
+                    pending_clear.append(int(clear.group(1)))
+                continue
+            elif node_kind in {"With", "UserStatement", "Pass"}:
                 # Transitions/audio/initialization don't affect this simplified
                 # linear playback. Crucially, none of these execute game code.
                 continue

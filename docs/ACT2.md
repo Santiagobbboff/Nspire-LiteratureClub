@@ -1,4 +1,4 @@
-# Act 2 on the TI-Nspire
+# Acts 2, 3 and 4 on the TI-Nspire
 
 Updated 2026-10-14. Act 2 is compiled from the original scripts (`script-ch10`,
 `script-ch20` to `script-ch23`, `script-poemresponses2`, `script-exclusives2-*`,
@@ -16,7 +16,11 @@ through the converter.
 | Then | poem → `ch21_main` → sharing → `ch21_end` → poem → `ch22_main` → sharing → `ch22_end` → poem → `ch23_main` → sharing → `ch23_end` → `yuri_kill` |
 | Weekend | `persistent.yuri_kill` counts every advance to 1440; every launch with `autoload = yuri_kill_2` adds 200 and resumes the corpse scene (as the original does) |
 | `yuri_kill_3` | `yuri.chr` and `natsuki.chr` deleted, saves deleted, `playthrough = 3`, `autoload = ch30_main`, back to the main menu |
-| New Game, playthrough 3/4 | Act 3 is not implemented: a placeholder line and a "Start over from Act 1" choice that resets the persistent values, deletes saves and restores the character files |
+| New Game, playthrough 3 (or autoload `ch30_*`) | Act 3: Monika's room, her 53 topics in random order (four persistent bit masks), resume speeches on relaunch (`monika_reload`), the poem of broken "Monika" words and `poem_m4` |
+| `characters/monika.chr.tns` missing at launch or before a topic | `ch30_end`: the deletion scene, then `playthrough = 4` and the main menu. Quit the game, delete the file in the document browser, relaunch |
+| New Game, playthrough 4 | Act 4 (`ch40_main`): the club without Monika; `clearall` (every CG seen, `persistent.clear[0..9]`) picks Sayori's good ending; then the credits |
+| Credits | the glitch backdrops, Monika's credit lines, the ten credit cards (the original CG or the "not found" card when that CG was never seen), "made with love by", the engine's scrolling roll, then the program exits |
+| Every later launch (`autoload = postcredits_loop`) | the final sheet, the "script file is missing" dialog, and the original's "delete your save data and start over?" choice |
 
 Each converter run keeps Act 1's event indices unchanged (the Act dispatch label is
 appended after the Act 1 credits and selected through the pack footer's start event),
@@ -41,19 +45,26 @@ events seeded from the poem seed and the event position, so saves replay identic
 
 ## Persistent values (`ddlc.sav.tns`, `DDP3` section, 16 × int16)
 
-0 playthrough, 1 yuri_kill, 2 autoload (1-3 `yuri_kill_1..3`, 4 `ch30_main`),
-3-5 special poems (1..11, drawn without repetition on the first Act 2 start),
-6 seen_eyes, 7 seen_sticker, 8 seen_ghost_menu, 9 deleted_saves, 10 seen_colors_poem.
-Settings and the notice flag precede the section unchanged.
+0 playthrough, 1 yuri_kill, 2 autoload (1-3 `yuri_kill_1..3`, 4 `ch30_main`, 5 `ch30_main2`,
+6 `ch30_postpoem`, 7 `ch30_autoload`, 8 `ch30_end`, 9 `ch30_end_2`, 10 `credits`,
+11 `postcredits_loop`), 3-5 special poems (1..11, drawn without repetition on the first
+Act 2 start), 6 seen_eyes, 7 seen_sticker, 8 seen_ghost_menu, 9 deleted_saves,
+10 seen_colors_poem, 11 monika_reload, 12 current_monikatopic, 13 monika_kill,
+14 tried_skip, 15 monika_back, 16-19 used-topic masks (`DDP4`, 32 values; `DDP3`
+files with 16 values are still read). Settings and the notice flag precede the section
+unchanged. CG unlocks (`persistent.clear[k]`) ride on the next dialogue event's `x`
+bits 2-5 and land in the existing gallery mask, so Act 1 event indices do not move.
 
 ## Pack format (DDUI version 3)
 
 - Branch targets (jump, if_state, if_state_gt, choice_option) are 32-bit and live in
   the unused speaker reference; packs may exceed 32,768 events (the full Act 1 + Act 2
   pack has about 52,600).
-- New ops: `system` (delete saves / delete character file / restore character files),
-  `persistent_load`, `persistent_store`, `effect` (screen tear, invert), `rand_state`.
-  `pause` with duration -1 waits for input.
+- New ops: `system` (1 delete saves, 2 delete a character file, 3 restore character
+  files by mask, 4 does a character file exist, 5 are all CGs seen, 6 is one CG seen),
+  `persistent_load`, `persistent_store`, `effect` (screen tear, invert), `rand_state`
+  (seeded from the poem seed, the event index and the story slots, so replays match
+  while loops vary). `pause` with duration -1 waits for input.
 - Footer: start event, the glitch alphabet, and the four original `.chr` files, which
   the launcher writes to `characters/<name>.chr.tns` next to the pack on New Game.
 - Dialogue: `{glitch=N}` renders N random glyphs from the alphabet; the "edited" style
@@ -81,11 +92,19 @@ Settings and the notice flag precede the section unchanged.
 - The `.chr` files are written beside the pack so the player can inspect or delete
   them with the document browser; the game only reads back whether `monika.chr`
   exists once Act 3 is ported.
-- Act 3 (`ch30`) and Act 4 (`ch40`) are not compiled yet.
+- Act 3: the window/room layers are one flattened background (no scrolling masks),
+  Monika's glitch frames are static, the RectStatic/colour-wash effects are skipped,
+  the waiting between topics keeps the original 20-40 s, and Monika's slow unskippable
+  text is ordinary dialogue. The "fake skip" scene is omitted.
+- Act 4 credits: no song; the glitch backdrops and credit cards are timed scenes with
+  text overlays instead of scrolling layers; the "deleted" CG variants are replaced by
+  the "not found" card. The Act 1 ending now shows the END card and returns to the
+  menu (the previous build rolled credits there).
 
 ## Testing on a PC
 
 `cpp/platform/headless/main.cpp` drives the engine from stdin and writes PPM frames;
-`tools/autoplay.py`-style scripts can play the whole act automatically. The Act 2
-run reaches the main menu after the weekend with `playthrough = 3` and the two
-character files removed.
+an autoplay script can play every act unattended. Act 2 reaches the main menu after
+the weekend with `playthrough = 3` and two character files removed; Act 3 loops
+topics until `monika.chr.tns` is deleted and the game relaunched; Act 4 ends in the
+credit roll and the program exits.

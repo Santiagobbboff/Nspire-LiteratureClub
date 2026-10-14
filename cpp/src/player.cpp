@@ -552,6 +552,19 @@ void Player::apply(const Event& event) {
     }
     break;
   case Op::system:
+    if (event.resource == 6) {
+      if (event.x >= 0 && static_cast<size_t>(event.x) < story_state_.size())
+        story_state_[static_cast<size_t>(event.x)] =
+            (gallery_unlocks_ >> std::clamp<int>(event.y, 0, 63)) & 1U ? 1 : 0;
+      break;
+    }
+    if (event.resource == 5) {
+      if (event.x >= 0 && static_cast<size_t>(event.x) < story_state_.size()) {
+        const uint64_t needed = (uint64_t{1} << std::clamp<int>(event.y, 1, 63)) - 1;
+        story_state_[static_cast<size_t>(event.x)] = (gallery_unlocks_ & needed) == needed ? 1 : 0;
+      }
+      break;
+    }
     if (event.resource == 4) {
       if (event.x >= 0 && static_cast<size_t>(event.x) < story_state_.size())
         story_state_[static_cast<size_t>(event.x)] =
@@ -580,8 +593,12 @@ void Player::apply(const Event& event) {
   case Op::rand_state: {
     if (event.resource >= story_state_.size() || event.x < 1)
       break;
-    // Deterministic per story position so save replay reproduces the draw.
-    uint32_t rng = (poem_seed_ ^ static_cast<uint32_t>(cursor_ * 0x9e3779b9u)) | 1U;
+    // Deterministic per story position and state so save replay reproduces the
+    // draw while a loop that returns to the same event (Act 3 topics) varies.
+    uint32_t rng = poem_seed_ ^ static_cast<uint32_t>(cursor_ * 0x9e3779b9u);
+    for (size_t slot = 0; slot < story_state_.size(); ++slot)
+      rng = (rng ^ static_cast<uint32_t>(static_cast<uint16_t>(story_state_[slot]))) * 0x01000193u;
+    rng |= 1U;
     for (int i = 0; i < 4; ++i) {
       rng ^= rng << 13;
       rng ^= rng >> 17;
@@ -731,6 +748,14 @@ void Player::apply(const Event& event) {
     if (event.x & 2) {
       cutscene_locked_ = true;
       skip_indicator_ = auto_play_ = false;
+    }
+    if (const int unlock = (event.x >> 2) & 0x0f; unlock) {
+      const uint64_t bit = uint64_t{1} << (unlock - 1);
+      if (!(gallery_unlocks_ & bit)) {
+        gallery_unlocks_ |= bit;
+        if (!replaying_)
+          save_persistent();
+      }
     }
     const bool extending = (event.flags & extend_flag) != 0;
     const bool continuing_centered = extending && centered_ && event.x == 1;

@@ -59,7 +59,7 @@ enum class Op : uint8_t {
   poem = 21,
   // Act 2 additions (DDUI footer version 3).
   system = 22,          // resource: 1 delete saves, 2 delete character x, 3 restore characters (mask x),
-                        //           4 slot x <- character file y exists
+                        //           4 slot x <- character file y exists, 5 slot x <- all y CGs seen, 6 slot x <- CG y seen
   persistent_load = 23, // story slot `resource` <- persistent key `x`
   persistent_store = 24,// persistent key `x` <- story slot `resource`
   effect = 25,          // resource: 0 stop, 1 tear, 2 invert; x duration ms (0 = until stop)

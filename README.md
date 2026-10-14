@@ -4,16 +4,18 @@
 
 # Nspire Literature Club 
 
-An unofficial port of DDLC Act 1 and Act 2 for the **TI-Nspire CX II with Ndless**.
+An unofficial port of DDLC (all four acts) for the **TI-Nspire CX II with Ndless**.
 Not affiliated with or endorsed by Team Salvato. Please play the original game first!
 [ddlc.moe](https://ddlc.moe).
 
 Full Act 1 (days 1-6) is playable and content complete, including route-dependent CGs,
 three scored poem rounds, the original poems and an ending. Act 2 follows after the
 ending: the glitched restart, the second week with its poems, special poems, the
-weekend, and the character files that appear (and disappear) in a `characters`
-folder next to the pack. Act 3 is not ported yet; the game offers to start over
-from Act 1 at that point. See [docs/ACT2.md](docs/ACT2.md) for details.
+weekend, Monika's room, the epilogue and the credits. The character files appear
+(and disappear) in a `characters` folder next to the pack; to leave Monika's room,
+quit the game, delete `characters/monika.chr.tns` in the document browser and
+relaunch. The pack is about 16.7 MB, so keep enough free space on the calculator.
+See [docs/ACT2.md](docs/ACT2.md) for details.
 
 ## How to Generate a Content Pack
 
@@ -93,8 +95,6 @@ or compile it yourself from /tools/desktop-preview/ to play it through a Windows
 Just put the .exe file next to your content pack, and launch the game!
 
 ## Future Goals and issues
-Port the rest of the game 
- 
 Add animations and transitions
 
   

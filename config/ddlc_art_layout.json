@@ -14553,6 +14553,223 @@
       "screen_y": 20,
       "introduced_act": 2,
       "opacity": 200
+    },
+    {
+      "kind": "background",
+      "image": [
+        "credits_cg1"
+      ],
+      "id": 71,
+      "file": "bg_071_credits_cg1.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "credits_cg2"
+      ],
+      "id": 72,
+      "file": "bg_072_credits_cg2.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "credits_cg3"
+      ],
+      "id": 73,
+      "file": "bg_073_credits_cg3.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "credits_cg4"
+      ],
+      "id": 74,
+      "file": "bg_074_credits_cg4.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "credits_cg5"
+      ],
+      "id": 75,
+      "file": "bg_075_credits_cg5.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "credits_cg6"
+      ],
+      "id": 76,
+      "file": "bg_076_credits_cg6.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "credits_cg7"
+      ],
+      "id": 77,
+      "file": "bg_077_credits_cg7.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "credits_cg8"
+      ],
+      "id": 78,
+      "file": "bg_078_credits_cg8.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "credits_cg9"
+      ],
+      "id": 79,
+      "file": "bg_079_credits_cg9.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "credits_cg10"
+      ],
+      "id": 80,
+      "file": "bg_080_credits_cg10.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "notfound"
+      ],
+      "id": 91,
+      "file": "bg_091_notfound.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "end_glitch1"
+      ],
+      "id": 92,
+      "file": "bg_092_end_glitch1.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "end_glitch2"
+      ],
+      "id": 93,
+      "file": "bg_093_end_glitch2.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "end_glitch3"
+      ],
+      "id": 94,
+      "file": "bg_094_end_glitch3.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "background",
+      "image": [
+        "end_glitch4"
+      ],
+      "id": 95,
+      "file": "bg_095_end_glitch4.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 4
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "credits_logo"
+      ],
+      "id": 18,
+      "file": "fs_018_credits_logo.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "credits_ts"
+      ],
+      "id": 19,
+      "file": "fs_019_credits_ts.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_end"
+      ],
+      "id": 20,
+      "file": "fs_020_poem_end.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_end_clearall"
+      ],
+      "id": 21,
+      "file": "fs_021_poem_end_clearall.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
     }
   ],
   "unresolved": [

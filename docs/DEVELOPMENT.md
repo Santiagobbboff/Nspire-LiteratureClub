@@ -55,7 +55,7 @@ public source archive; `.gitignore` does not filter a manually zipped folder.
 | `tools/ddlc_transforms.py` | MIT transform reader from TI-84 reference tools |
 | `tools/compile_first_day.py` | Entry point; Days 1–3 and initial poem logic |
 | `tools/compile_day4.py` through `compile_day6.py` | Later Act 1 branches and finale |
-| `tools/compile_act2.py`, `bake_act2_art.py` | Act 2 story and effect/overlay art |
+| `tools/compile_act2.py`, `compile_act3.py`, `compile_act4.py`, `bake_act2_art.py` | Acts 2-4 story, credits, effect/overlay art |
 | `tools/update_art_layout.py` | Merge a fresh bake into `config/ddlc_art_layout.json` keeping old ids |
 | `tools/poems.py`, `prepare_ending.py`, `prepare_ui_art.py` | Paper/fonts, ending frames and pack UI art |
 | `python/src/nzato_converter/compiler.py` | Binary pack, image and glyph encoding |
@@ -83,5 +83,5 @@ Ndless emulator and cannot establish calculator performance or hardware behavior
 Consult [GAME_INTERNALS.md](GAME_INTERNALS.md) before changing state slots, menu/event order, poem
 bindings or renderer cleanup. Saves reconstruct playback from a cursor, decisions,
 random seed and story-state snapshot. Renumbering events may invalidate saves even
-without changing the save version. Branch targets are 32-bit; about 52,600 events are used.
+without changing the save version. Branch targets are 32-bit; about 62,000 events are used.
 

@@ -989,6 +989,8 @@ def build_pack(
             x = 1 if event.get("centered") else 0
             if event.get("lock_skip"):
                 x |= 2  # Room-entry control bit; y still stores the font size.
+            if event.get("clear_cg") is not None:
+                x |= (int(event["clear_cg"]) + 1) << 2  # persistent.clear[k] unlock
             y = say_sizes.get(event_index, 12 if language == "zh" else 11)
         elif event["op"] in ("scene", "show", "move") and name:
             image_resource = next(r for r in manifest["resources"] if r["name"] == name)

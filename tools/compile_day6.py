@@ -72,6 +72,11 @@ def extend_day6(previous):
     compiler.label("day6_start")
     compiler.invoke("ch5_main")
     compiler.label("act1_credits")
-    compiler.events.append({"op": "end", "flags": 2})
+    # Original `endgame`: the END card, then the main menu; Act 2 starts on the next New Game.
+    end_row = compiler.assets.get(("end",))
+    if end_row is not None and end_row.get("kind") == "fullscreen_background":
+        compiler.events.append({"op": "scene", "resource": f"fs_{end_row['id']:03d}"})
+        compiler.events.append({"op": "pause", "duration_ms": 4000})
+    compiler.events.append({"op": "end", "flags": 0})
     from compile_act2 import extend_act2
     extend_act2(compiler)

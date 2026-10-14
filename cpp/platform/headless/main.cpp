@@ -49,6 +49,14 @@ int main(int argc, char** argv) {
     else if (line[0] == 'b') player.input_backspace();
     else if (line[0] == 'f') player.fast_forward();
     else if (line[0] == 'q') break;
+    else if (line[0] == 'v') {
+      std::printf("slots:");
+      for (int16_t v : player.story_state()) std::printf(" %d", v);
+      std::printf(" persist:");
+      for (int16_t v : player.persistent_values()) std::printf(" %d", v);
+      std::printf("\n");
+      std::fflush(stdout);
+    }
     else if (line[0] == 's' && line[1] == 't') {
       // state: cursor, flags, current speaker/text
       std::string text(player.current_text());

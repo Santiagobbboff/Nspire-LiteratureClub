@@ -9,10 +9,13 @@ from PIL import Image, ImageDraw, ImageFont
 from ddlc_image_resolve import ImageResolver
 
 CREDITS = "\n".join((
-    "Doki Doki Literature Club!", "Act 1", "", "Original game", "Team Salvato",
-    "", "nZATO engine", "by zyf722", "", "DDLC TI-84 Plus CE",
-    "by koboshchan", "", "DDLC TI nspire port by:",
-    "Santiagobbboff and Chatgpt-san", "", "act 2 coming soon?",
+    "Doki Doki Literature Club!", "", "Concept & Game Design", "Dan Salvato", "",
+    "Character Art", "Satchely", "", "Background Art", "Velinquent", "",
+    "Writing", "Dan Salvato", "", "Music", "Dan Salvato", "", "Vocals", "Jillian Ashcraft", "",
+    "Special Thanks", "Masha Gutin", "Kagefumi", "David Evelyn", "Corey Shin",
+    "Alecia Bardachino", "Matt Naples", "", "made with love by", "Team Salvato", "",
+    "nZATO engine", "by zyf722", "", "DDLC TI-84 Plus CE", "by koboshchan", "",
+    "DDLC TI-Nspire port by", "Santiagobbboff and Chatgpt-san", "", "Thank you for playing.",
 ))
 
 
