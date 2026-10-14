@@ -215,7 +215,9 @@ class Act3Compiler(Act2Compiler):
     def python(self, node):
         source = (pycode_source(node.code) or "").strip()
         if "\n" in source:
-            if 'renpy.file("../characters/monika.chr")' in source:
+            if "persistent.monika_back" in source:
+                pass  # Act 4's check comes first: it also mentions monika.chr
+            elif 'renpy.file("../characters/monika.chr")' in source:
                 self.check_monika_file()
                 return
             if "persistent.current_monikatopic = random.choice" in source:
@@ -351,6 +353,9 @@ def extend_act3(previous):
     compiler.label("act3_topics")
     compiler.possible.clear()
     compiler.visible.clear()
+    speakers["m"] = "Monika"  # ch30_end's glitched name must not leak into the topics
+    compiler.replacements["m_name"] = "Monika"
+    compiler.edited = False
     compiler.emit_topics()
     compiler.jump("act3_loop")
     compiler.label("act3_loop")
