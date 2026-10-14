@@ -833,8 +833,8 @@ def build_pack(
     for event_index, event in enumerate(manifest["events"]):
         text = str(event.get(f"text_{suffix}", ""))
         if event.get('op') == 'poem':
-            base = {'sayori': 0xE200, 'natsuki': 0xE400,
-                    'yuri': 0xE600, 'monika': 0xE800}[event['author']]
+            base = {'sayori': 0xE200, 'natsuki': 0xE400, 'yuri': 0xE600, 'monika': 0xE800,
+                    'yuri2': 0xEC00, 'yuri3': 0xEE00}[event['author']]
             text = ''.join(c if c in '\n\r\t' else chr(base + ord(c)) for c in text)
         elif event.get('op') == 'say' and event.get('edited'):
             text = edited_bank_text(text)
@@ -886,7 +886,7 @@ def build_pack(
         chinese_font=language == "zh",
     )
     glyphs = [g for g in glyphs
-              if not 0xE200 <= (struct.unpack_from('<I', g)[0] & 0xFFFFFF) < 0xEB00]
+              if not 0xE200 <= (struct.unpack_from('<I', g)[0] & 0xFFFFFF) < 0xF000]
     glyphs.extend(poem_glyph_records(manifest.get('poem_fonts', [])))
     glitch_alphabet = str(manifest.get("glitch_alphabet", ""))
     if glitch_alphabet:
@@ -994,7 +994,8 @@ def build_pack(
             elif actual_kinds[name] == "fullscreen_background":
                 x, y = 0, 0
             elif actual_kinds[name] in ("screen_layer", "fullscreen_layer"):
-                x, y = 0, 20
+                x = int(event.get("screen_x", 0))
+                y = int(event.get("screen_y", 20))
             elif actual_kinds[name] == "prescaled_sprite":
                 x = int(event.get("screen_x", 0))
                 y = int(event.get("screen_y", 0))

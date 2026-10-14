@@ -497,6 +497,8 @@ def extend_day4(events, raw_dir, word_rows, store_opinion, compile_linear,
                 replacements, report_skip):
     compiler = Day4Compiler(events, raw_dir, compile_linear, visible, aliases, centers,
                             cg_layers, assets, character_layers, replacements, report_skip)
+    compiler.store_opinion = store_opinion
+    compiler.word_rows = word_rows
     compiler.label("poem3_prepare")
     for slot in (3, 4, 5):
         compiler.set(slot, 0)

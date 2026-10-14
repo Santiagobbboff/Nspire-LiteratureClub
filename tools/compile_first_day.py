@@ -64,10 +64,14 @@ def main() -> int:
                                       "kind": "prescaled_sprite"})
                     resource_names_seen.add(part["name"])
         else:
-            name = f"{'bg' if row['kind'] == 'background' else 'sprite'}_{row['id']:03d}"
+            prefix = {"background": "bg", "screen_layer": "ovl", "fullscreen_layer": "fsl",
+                      "fullscreen_background": "fs"}.get(row["kind"], "sprite")
+            name = f"{prefix}_{row['id']:03d}"
             resource_name[image] = name
-            resources.append({"name": name, "path": f"img/{row['file']}",
-                              "kind": row["kind"]})
+            entry = {"name": name, "path": f"img/{row['file']}", "kind": row["kind"]}
+            if "screen_y" in row:
+                entry["screen_x"], entry["screen_y"] = row.get("screen_x", 0), row["screen_y"]
+            resources.append(entry)
 
     # The simplified DDLC title menu intentionally uses a plain black backdrop
     # until the real menu artwork is adapted for the Nspire layout.

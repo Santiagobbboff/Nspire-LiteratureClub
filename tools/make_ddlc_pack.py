@@ -121,7 +121,7 @@ def preserve_art_layout(baked, output):
         new = images.get(tuple(row["image"]))
         if new is None or new["kind"] != row["kind"]:
             raise ConversionError("Original installation does not match the supported art layout")
-        if row["kind"] == "background":
+        if "layers" not in row:
             pairs = [(row, new)]
         else:
             if len(row["layers"]) != len(new["layers"]):
@@ -135,6 +135,7 @@ def preserve_art_layout(baked, output):
             if old_file not in copied:
                 shutil.copy2(baked / "img" / new_part["file"], output / "img" / old_file)
                 copied.add(old_file)
+    layout["variants"] = fresh.get("variants", {})
     (output / "assets.json").write_text(json.dumps(layout, indent=2), encoding="utf-8")
 
 

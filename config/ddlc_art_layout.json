@@ -11937,6 +11937,2432 @@
         }
       ],
       "introduced_day": 5
+    },
+    {
+      "kind": "background",
+      "image": [
+        "bg",
+        "club_day2"
+      ],
+      "id": 51,
+      "file": "bg_051_bg_club_day.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "bg",
+        "glitch"
+      ],
+      "id": 52,
+      "file": "bg_052_bg_glitch.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "n_cg1_bg",
+        "n_cg1_base",
+        "n_cg1_exp4"
+      ],
+      "id": 53,
+      "file": "bg_053_n_cg1_bg_n_cg1_base_n_cg1_exp4.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "n_cg1_bg",
+        "n_cg1_base",
+        "n_cg1_exp5"
+      ],
+      "id": 54,
+      "file": "bg_054_n_cg1_bg_n_cg1_base_n_cg1_exp5.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "n_cg1_bg",
+        "n_cg1_base",
+        "n_cg1b"
+      ],
+      "id": 55,
+      "file": "bg_055_n_cg1_bg_n_cg1b.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "n_cg1_bg",
+        "n_cg1b"
+      ],
+      "id": 56,
+      "file": "bg_056_n_cg1_bg_n_cg1b.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "white"
+      ],
+      "id": 57,
+      "file": "bg_057_white.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_cg1_base",
+        "y_cg1_exp3"
+      ],
+      "id": 58,
+      "file": "bg_058_y_cg1_base_y_cg1_exp3.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_cg1_base",
+        "y_cg1_exp3",
+        "y_cg1_exp1"
+      ],
+      "id": 59,
+      "file": "bg_059_y_cg1_base_y_cg1_exp1.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "monika",
+        "1h"
+      ],
+      "id": 380,
+      "layers": [
+        {
+          "name": "sprite_atom_000",
+          "id": 0,
+          "role": "base",
+          "file": "sprite_000_monika_1l-1r.png",
+          "width": 114,
+          "height": 118,
+          "x_offset": 11,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_176",
+          "id": 176,
+          "role": "expression",
+          "file": "sprite_176_monika_h.png",
+          "width": 82,
+          "height": 61,
+          "x_offset": -6,
+          "y_offset": -118
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "monika",
+        "1o"
+      ],
+      "id": 381,
+      "layers": [
+        {
+          "name": "sprite_atom_000",
+          "id": 0,
+          "role": "base",
+          "file": "sprite_000_monika_1l-1r.png",
+          "width": 114,
+          "height": 118,
+          "x_offset": 11,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_177",
+          "id": 177,
+          "role": "expression",
+          "file": "sprite_177_monika_o.png",
+          "width": 82,
+          "height": 61,
+          "x_offset": -6,
+          "y_offset": -118
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "monika",
+        "2p"
+      ],
+      "id": 382,
+      "layers": [
+        {
+          "name": "sprite_atom_014",
+          "id": 14,
+          "role": "base",
+          "file": "sprite_014_monika_1l-2r.png",
+          "width": 114,
+          "height": 118,
+          "x_offset": 11,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_012",
+          "id": 12,
+          "role": "expression",
+          "file": "sprite_012_monika_p.png",
+          "width": 82,
+          "height": 61,
+          "x_offset": -6,
+          "y_offset": -118
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "monika",
+        "3g"
+      ],
+      "id": 383,
+      "layers": [
+        {
+          "name": "sprite_atom_015",
+          "id": 15,
+          "role": "base",
+          "file": "sprite_015_monika_2l-1r.png",
+          "width": 130,
+          "height": 118,
+          "x_offset": 2,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_005",
+          "id": 5,
+          "role": "expression",
+          "file": "sprite_005_monika_g.png",
+          "width": 82,
+          "height": 61,
+          "x_offset": -6,
+          "y_offset": -118
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "monika",
+        "3i"
+      ],
+      "id": 384,
+      "layers": [
+        {
+          "name": "sprite_atom_015",
+          "id": 15,
+          "role": "base",
+          "file": "sprite_015_monika_2l-1r.png",
+          "width": 130,
+          "height": 118,
+          "x_offset": 2,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_006",
+          "id": 6,
+          "role": "expression",
+          "file": "sprite_006_monika_i.png",
+          "width": 82,
+          "height": 61,
+          "x_offset": -6,
+          "y_offset": -118
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "monika",
+        "4r"
+      ],
+      "id": 385,
+      "layers": [
+        {
+          "name": "sprite_atom_016",
+          "id": 16,
+          "role": "base",
+          "file": "sprite_016_monika_2l-2r.png",
+          "width": 130,
+          "height": 118,
+          "x_offset": 2,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_013",
+          "id": 13,
+          "role": "expression",
+          "file": "sprite_013_monika_r.png",
+          "width": 82,
+          "height": 61,
+          "x_offset": -6,
+          "y_offset": -118
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "monika",
+        "g1"
+      ],
+      "id": 386,
+      "layers": [
+        {
+          "name": "sprite_atom_178",
+          "id": 178,
+          "role": "base",
+          "file": "sprite_178_monika_g1.png",
+          "width": 125,
+          "height": 196,
+          "x_offset": 0,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "monika",
+        "g2"
+      ],
+      "id": 387,
+      "layers": [
+        {
+          "name": "sprite_atom_179",
+          "id": 179,
+          "role": "base",
+          "file": "sprite_179_monika_g2.png",
+          "width": 144,
+          "height": 192,
+          "x_offset": 0,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "4k"
+      ],
+      "id": 388,
+      "layers": [
+        {
+          "name": "sprite_atom_053",
+          "id": 53,
+          "role": "base",
+          "file": "sprite_053_natsuki_2l-2r.png",
+          "width": 100,
+          "height": 102,
+          "x_offset": 4,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_033",
+          "id": 33,
+          "role": "expression",
+          "file": "sprite_033_natsuki_k.png",
+          "width": 72,
+          "height": 55,
+          "x_offset": 4,
+          "y_offset": -101
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "4s"
+      ],
+      "id": 389,
+      "layers": [
+        {
+          "name": "sprite_atom_053",
+          "id": 53,
+          "role": "base",
+          "file": "sprite_053_natsuki_2l-2r.png",
+          "width": 100,
+          "height": 102,
+          "x_offset": 4,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_040",
+          "id": 40,
+          "role": "expression",
+          "file": "sprite_040_natsuki_s.png",
+          "width": 72,
+          "height": 55,
+          "x_offset": 4,
+          "y_offset": -101
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "4u"
+      ],
+      "id": 390,
+      "layers": [
+        {
+          "name": "sprite_atom_053",
+          "id": 53,
+          "role": "base",
+          "file": "sprite_053_natsuki_2l-2r.png",
+          "width": 100,
+          "height": 102,
+          "x_offset": 4,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_042",
+          "id": 42,
+          "role": "expression",
+          "file": "sprite_042_natsuki_u.png",
+          "width": 72,
+          "height": 55,
+          "x_offset": 4,
+          "y_offset": -101
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "ghost1"
+      ],
+      "id": 391,
+      "layers": [
+        {
+          "name": "sprite_atom_180",
+          "id": 180,
+          "role": "base",
+          "file": "sprite_180_natsuki_ghost1.png",
+          "width": 104,
+          "height": 156,
+          "x_offset": 4,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "ghost2"
+      ],
+      "id": 392,
+      "layers": [
+        {
+          "name": "sprite_atom_181",
+          "id": 181,
+          "role": "base",
+          "file": "sprite_181_natsuki_ghost2.png",
+          "width": 104,
+          "height": 156,
+          "x_offset": 4,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "ghost3"
+      ],
+      "id": 393,
+      "layers": [
+        {
+          "name": "sprite_atom_182",
+          "id": 182,
+          "role": "base",
+          "file": "sprite_182_natsuki_ghost3.png",
+          "width": 106,
+          "height": 129,
+          "x_offset": 5,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "ghost4"
+      ],
+      "id": 394,
+      "layers": [
+        {
+          "name": "sprite_atom_182",
+          "id": 182,
+          "role": "base",
+          "file": "sprite_182_natsuki_ghost3.png",
+          "width": 106,
+          "height": 129,
+          "x_offset": 5,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "ghost_base"
+      ],
+      "id": 395,
+      "layers": [
+        {
+          "name": "sprite_atom_183",
+          "id": 183,
+          "role": "base",
+          "file": "sprite_183_natsuki_ghost_base.png",
+          "width": 104,
+          "height": 156,
+          "x_offset": 4,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "glitch1"
+      ],
+      "id": 396,
+      "layers": [
+        {
+          "name": "sprite_atom_184",
+          "id": 184,
+          "role": "base",
+          "file": "sprite_184_natsuki_glitch1.png",
+          "width": 99,
+          "height": 156,
+          "x_offset": 3,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "mouth"
+      ],
+      "id": 397,
+      "layers": [
+        {
+          "name": "sprite_atom_185",
+          "id": 185,
+          "role": "base",
+          "file": "sprite_185_natsuki_mouth.png",
+          "width": 72,
+          "height": 55,
+          "x_offset": 4,
+          "y_offset": -101
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "scream"
+      ],
+      "id": 398,
+      "layers": [
+        {
+          "name": "sprite_atom_018",
+          "id": 18,
+          "role": "base",
+          "file": "sprite_018_natsuki_1l-1r.png",
+          "width": 104,
+          "height": 102,
+          "x_offset": 4,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_186",
+          "id": 186,
+          "role": "expression",
+          "file": "sprite_186_natsuki_scream.png",
+          "width": 72,
+          "height": 55,
+          "x_offset": 4,
+          "y_offset": -101
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "natsuki",
+        "vomit"
+      ],
+      "id": 399,
+      "layers": [
+        {
+          "name": "sprite_atom_187",
+          "id": 187,
+          "role": "base",
+          "file": "sprite_187_natsuki_vomit.png",
+          "width": 81,
+          "height": 154,
+          "x_offset": -4,
+          "y_offset": -1
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "sayori",
+        "glitch"
+      ],
+      "id": 400,
+      "layers": [
+        {
+          "name": "sprite_atom_188",
+          "id": 188,
+          "role": "base",
+          "file": "sprite_188_sayori_glitch.png",
+          "width": 179,
+          "height": 179,
+          "x_offset": 0,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "1b"
+      ],
+      "id": 401,
+      "layers": [
+        {
+          "name": "sprite_atom_098",
+          "id": 98,
+          "role": "base",
+          "file": "sprite_098_yuri_1l-1r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_189",
+          "id": 189,
+          "role": "expression",
+          "file": "sprite_189_yuri_b.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "1d"
+      ],
+      "id": 402,
+      "layers": [
+        {
+          "name": "sprite_atom_098",
+          "id": 98,
+          "role": "base",
+          "file": "sprite_098_yuri_1l-1r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_190",
+          "id": 190,
+          "role": "expression",
+          "file": "sprite_190_yuri_d.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "1q"
+      ],
+      "id": 403,
+      "layers": [
+        {
+          "name": "sprite_atom_098",
+          "id": 98,
+          "role": "base",
+          "file": "sprite_098_yuri_1l-1r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_119",
+          "id": 119,
+          "role": "expression",
+          "file": "sprite_119_yuri_q.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "1y1"
+      ],
+      "id": 404,
+      "layers": [
+        {
+          "name": "sprite_atom_098",
+          "id": 98,
+          "role": "base",
+          "file": "sprite_098_yuri_1l-1r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_191",
+          "id": 191,
+          "role": "expression",
+          "file": "sprite_191_yuri_y1.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "1y3"
+      ],
+      "id": 405,
+      "layers": [
+        {
+          "name": "sprite_atom_098",
+          "id": 98,
+          "role": "base",
+          "file": "sprite_098_yuri_1l-1r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_192",
+          "id": 192,
+          "role": "expression",
+          "file": "sprite_192_yuri_y3.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "1y4"
+      ],
+      "id": 406,
+      "layers": [
+        {
+          "name": "sprite_atom_098",
+          "id": 98,
+          "role": "base",
+          "file": "sprite_098_yuri_1l-1r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_193",
+          "id": 193,
+          "role": "expression",
+          "file": "sprite_193_yuri_y4.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "1y5"
+      ],
+      "id": 407,
+      "layers": [
+        {
+          "name": "sprite_atom_098",
+          "id": 98,
+          "role": "base",
+          "file": "sprite_098_yuri_1l-1r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_194",
+          "id": 194,
+          "role": "expression",
+          "file": "sprite_194_yuri_y5.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "1y6"
+      ],
+      "id": 408,
+      "layers": [
+        {
+          "name": "sprite_atom_098",
+          "id": 98,
+          "role": "base",
+          "file": "sprite_098_yuri_1l-1r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_195",
+          "id": 195,
+          "role": "expression",
+          "file": "sprite_195_yuri_y6.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "2"
+      ],
+      "id": 409,
+      "layers": [
+        {
+          "name": "sprite_atom_116",
+          "id": 116,
+          "role": "base",
+          "file": "sprite_116_yuri_1l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_099",
+          "id": 99,
+          "role": "expression",
+          "file": "sprite_099_yuri_a.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "2b"
+      ],
+      "id": 410,
+      "layers": [
+        {
+          "name": "sprite_atom_116",
+          "id": 116,
+          "role": "base",
+          "file": "sprite_116_yuri_1l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_189",
+          "id": 189,
+          "role": "expression",
+          "file": "sprite_189_yuri_b.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "2d"
+      ],
+      "id": 411,
+      "layers": [
+        {
+          "name": "sprite_atom_116",
+          "id": 116,
+          "role": "base",
+          "file": "sprite_116_yuri_1l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_190",
+          "id": 190,
+          "role": "expression",
+          "file": "sprite_190_yuri_d.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "2y1"
+      ],
+      "id": 412,
+      "layers": [
+        {
+          "name": "sprite_atom_116",
+          "id": 116,
+          "role": "base",
+          "file": "sprite_116_yuri_1l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_191",
+          "id": 191,
+          "role": "expression",
+          "file": "sprite_191_yuri_y1.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "2y3"
+      ],
+      "id": 413,
+      "layers": [
+        {
+          "name": "sprite_atom_116",
+          "id": 116,
+          "role": "base",
+          "file": "sprite_116_yuri_1l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_192",
+          "id": 192,
+          "role": "expression",
+          "file": "sprite_192_yuri_y3.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "2y4"
+      ],
+      "id": 414,
+      "layers": [
+        {
+          "name": "sprite_atom_116",
+          "id": 116,
+          "role": "base",
+          "file": "sprite_116_yuri_1l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_193",
+          "id": 193,
+          "role": "expression",
+          "file": "sprite_193_yuri_y4.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "2y5"
+      ],
+      "id": 415,
+      "layers": [
+        {
+          "name": "sprite_atom_116",
+          "id": 116,
+          "role": "base",
+          "file": "sprite_116_yuri_1l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_194",
+          "id": 194,
+          "role": "expression",
+          "file": "sprite_194_yuri_y5.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "2y6"
+      ],
+      "id": 416,
+      "layers": [
+        {
+          "name": "sprite_atom_116",
+          "id": 116,
+          "role": "base",
+          "file": "sprite_116_yuri_1l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_195",
+          "id": 195,
+          "role": "expression",
+          "file": "sprite_195_yuri_y6.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "3"
+      ],
+      "id": 417,
+      "layers": [
+        {
+          "name": "sprite_atom_121",
+          "id": 121,
+          "role": "base",
+          "file": "sprite_121_yuri_2l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_099",
+          "id": 99,
+          "role": "expression",
+          "file": "sprite_099_yuri_a.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "3d"
+      ],
+      "id": 418,
+      "layers": [
+        {
+          "name": "sprite_atom_121",
+          "id": 121,
+          "role": "base",
+          "file": "sprite_121_yuri_2l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_190",
+          "id": 190,
+          "role": "expression",
+          "file": "sprite_190_yuri_d.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "3j"
+      ],
+      "id": 419,
+      "layers": [
+        {
+          "name": "sprite_atom_121",
+          "id": 121,
+          "role": "base",
+          "file": "sprite_121_yuri_2l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_117",
+          "id": 117,
+          "role": "expression",
+          "file": "sprite_117_yuri_j.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "3m"
+      ],
+      "id": 420,
+      "layers": [
+        {
+          "name": "sprite_atom_121",
+          "id": 121,
+          "role": "base",
+          "file": "sprite_121_yuri_2l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_108",
+          "id": 108,
+          "role": "expression",
+          "file": "sprite_108_yuri_m.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "3y1"
+      ],
+      "id": 421,
+      "layers": [
+        {
+          "name": "sprite_atom_121",
+          "id": 121,
+          "role": "base",
+          "file": "sprite_121_yuri_2l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_191",
+          "id": 191,
+          "role": "expression",
+          "file": "sprite_191_yuri_y1.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "3y2"
+      ],
+      "id": 422,
+      "layers": [
+        {
+          "name": "sprite_atom_121",
+          "id": 121,
+          "role": "base",
+          "file": "sprite_121_yuri_2l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_196",
+          "id": 196,
+          "role": "expression",
+          "file": "sprite_196_yuri_y2.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "3y3"
+      ],
+      "id": 423,
+      "layers": [
+        {
+          "name": "sprite_atom_121",
+          "id": 121,
+          "role": "base",
+          "file": "sprite_121_yuri_2l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_192",
+          "id": 192,
+          "role": "expression",
+          "file": "sprite_192_yuri_y3.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "3y4"
+      ],
+      "id": 424,
+      "layers": [
+        {
+          "name": "sprite_atom_121",
+          "id": 121,
+          "role": "base",
+          "file": "sprite_121_yuri_2l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_193",
+          "id": 193,
+          "role": "expression",
+          "file": "sprite_193_yuri_y4.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "3y5"
+      ],
+      "id": 425,
+      "layers": [
+        {
+          "name": "sprite_atom_121",
+          "id": 121,
+          "role": "base",
+          "file": "sprite_121_yuri_2l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_194",
+          "id": 194,
+          "role": "expression",
+          "file": "sprite_194_yuri_y5.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "3y6"
+      ],
+      "id": 426,
+      "layers": [
+        {
+          "name": "sprite_atom_121",
+          "id": 121,
+          "role": "base",
+          "file": "sprite_121_yuri_2l-2r.png",
+          "width": 102,
+          "height": 124,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_195",
+          "id": 195,
+          "role": "expression",
+          "file": "sprite_195_yuri_y6.png",
+          "width": 53,
+          "height": 56,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "4d"
+      ],
+      "id": 427,
+      "layers": [
+        {
+          "name": "sprite_atom_122",
+          "id": 122,
+          "role": "base",
+          "file": "sprite_122_yuri_3.png",
+          "width": 112,
+          "height": 165,
+          "x_offset": 8,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_197",
+          "id": 197,
+          "role": "expression",
+          "file": "sprite_197_yuri_d2.png",
+          "width": 55,
+          "height": 55,
+          "x_offset": -3,
+          "y_offset": -124
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "cuts"
+      ],
+      "id": 428,
+      "layers": [
+        {
+          "name": "sprite_atom_198",
+          "id": 198,
+          "role": "base",
+          "file": "sprite_198_yuri_cuts.png",
+          "width": 102,
+          "height": 180,
+          "x_offset": 7,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "dragon"
+      ],
+      "id": 429,
+      "layers": [
+        {
+          "name": "sprite_atom_199",
+          "id": 199,
+          "role": "base",
+          "file": "sprite_199_yuri_dragon.png",
+          "width": 102,
+          "height": 180,
+          "x_offset": 7,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "glitch"
+      ],
+      "id": 430,
+      "layers": [
+        {
+          "name": "sprite_atom_200",
+          "id": 200,
+          "role": "base",
+          "file": "sprite_200_yuri_glitch.png",
+          "width": 179,
+          "height": 179,
+          "x_offset": 0,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "glitch2"
+      ],
+      "id": 431,
+      "layers": [
+        {
+          "name": "sprite_atom_201",
+          "id": 201,
+          "role": "base",
+          "file": "sprite_201_yuri_glitch2.png",
+          "width": 102,
+          "height": 180,
+          "x_offset": 7,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "half"
+      ],
+      "id": 432,
+      "layers": [
+        {
+          "name": "sprite_atom_202",
+          "id": 202,
+          "role": "base",
+          "file": "sprite_202_yuri_half.png",
+          "width": 26,
+          "height": 124,
+          "x_offset": -31,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "oneeye"
+      ],
+      "id": 433,
+      "layers": [
+        {
+          "name": "sprite_atom_203",
+          "id": 203,
+          "role": "base",
+          "file": "sprite_203_yuri_1l-1r-oneeye.png",
+          "width": 102,
+          "height": 180,
+          "x_offset": 7,
+          "y_offset": 0
+        },
+        {
+          "name": "sprite_atom_204",
+          "id": 204,
+          "role": "expression",
+          "file": "sprite_204_yuri_yuri oneeye2.png",
+          "width": 7,
+          "height": 4,
+          "x_offset": -19,
+          "y_offset": -142
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "stab_1"
+      ],
+      "id": 434,
+      "layers": [
+        {
+          "name": "sprite_atom_205",
+          "id": 205,
+          "role": "base",
+          "file": "sprite_205_yuri_stab_1.png",
+          "width": 115,
+          "height": 180,
+          "x_offset": 0,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "stab_2"
+      ],
+      "id": 435,
+      "layers": [
+        {
+          "name": "sprite_atom_206",
+          "id": 206,
+          "role": "base",
+          "file": "sprite_206_yuri_stab_2.png",
+          "width": 102,
+          "height": 180,
+          "x_offset": 7,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "stab_3"
+      ],
+      "id": 436,
+      "layers": [
+        {
+          "name": "sprite_atom_207",
+          "id": 207,
+          "role": "base",
+          "file": "sprite_207_yuri_stab_3.png",
+          "width": 115,
+          "height": 180,
+          "x_offset": 0,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "stab_4"
+      ],
+      "id": 437,
+      "layers": [
+        {
+          "name": "sprite_atom_208",
+          "id": 208,
+          "role": "base",
+          "file": "sprite_208_yuri_stab_4.png",
+          "width": 102,
+          "height": 180,
+          "x_offset": 7,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "stab_5"
+      ],
+      "id": 438,
+      "layers": [
+        {
+          "name": "sprite_atom_209",
+          "id": 209,
+          "role": "base",
+          "file": "sprite_209_yuri_stab_5.png",
+          "width": 115,
+          "height": 180,
+          "x_offset": 0,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri",
+        "stab_6"
+      ],
+      "id": 439,
+      "layers": [
+        {
+          "name": "sprite_atom_210",
+          "id": 210,
+          "role": "base",
+          "file": "sprite_210_yuri_6-mask-yuri stab_6_eyes.png",
+          "width": 26,
+          "height": 10,
+          "x_offset": -9,
+          "y_offset": -140
+        },
+        {
+          "name": "sprite_atom_211",
+          "id": 211,
+          "role": "expression",
+          "file": "sprite_211_yuri_6.png",
+          "width": 102,
+          "height": 180,
+          "x_offset": 7,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "prescaled_sprite",
+      "image": [
+        "yuri_half2"
+      ],
+      "id": 440,
+      "layers": [
+        {
+          "name": "sprite_atom_212",
+          "id": 212,
+          "role": "base",
+          "file": "sprite_212_yuri_half2.png",
+          "width": 78,
+          "height": 124,
+          "x_offset": 19,
+          "y_offset": 0
+        }
+      ],
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "Solid(\"#440000\")"
+      ],
+      "id": 0,
+      "file": "ovl_000_Solid_440000_.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "Solid(\"ff0000\")"
+      ],
+      "id": 1,
+      "file": "ovl_001_Solid_ff0000_.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "bg",
+        "eyes"
+      ],
+      "id": 0,
+      "file": "fs_000_bg_eyes.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "blood"
+      ],
+      "id": 2,
+      "file": "ovl_002_blood.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "blood_eye"
+      ],
+      "id": 3,
+      "file": "ovl_003_blood_eye.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "blood_eye2"
+      ],
+      "id": 4,
+      "file": "ovl_004_blood_eye2.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "bsod"
+      ],
+      "id": 1,
+      "file": "fs_001_bsod.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "dark"
+      ],
+      "id": 5,
+      "file": "ovl_005_dark.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "darkred"
+      ],
+      "id": 6,
+      "file": "ovl_006_darkred.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "end"
+      ],
+      "id": 2,
+      "file": "fs_002_end.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "intro"
+      ],
+      "id": 3,
+      "file": "fs_003_intro.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "n_moving_mouth"
+      ],
+      "id": 7,
+      "file": "ovl_007_n_moving_mouth.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "n_rects_ghost1"
+      ],
+      "id": 8,
+      "file": "ovl_008_n_rects_ghost1.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "n_rects_ghost2"
+      ],
+      "id": 9,
+      "file": "ovl_009_n_rects_ghost2.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "n_rects_ghost3"
+      ],
+      "id": 10,
+      "file": "ovl_010_n_rects_ghost3.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "n_rects_ghost4"
+      ],
+      "id": 11,
+      "file": "ovl_011_n_rects_ghost4.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "n_rects_ghost5"
+      ],
+      "id": 12,
+      "file": "ovl_012_n_rects_ghost5.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "natsuki_ghost_blood"
+      ],
+      "id": 13,
+      "file": "ovl_013_natsuki_ghost_blood.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "noface1"
+      ],
+      "id": 14,
+      "file": "ovl_014_noface1.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "noface2"
+      ],
+      "id": 15,
+      "file": "ovl_015_noface2.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "noise"
+      ],
+      "id": 16,
+      "file": "ovl_016_noise.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "paper_glitch"
+      ],
+      "id": 4,
+      "file": "fs_004_paper_glitch.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special1"
+      ],
+      "id": 5,
+      "file": "fs_005_poem_special1.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special10"
+      ],
+      "id": 6,
+      "file": "fs_006_poem_special10.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special11"
+      ],
+      "id": 7,
+      "file": "fs_007_poem_special11.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special2"
+      ],
+      "id": 8,
+      "file": "fs_008_poem_special2.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special3"
+      ],
+      "id": 9,
+      "file": "fs_009_poem_special3.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special4"
+      ],
+      "id": 10,
+      "file": "fs_010_poem_special4.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special5"
+      ],
+      "id": 11,
+      "file": "fs_011_poem_special5.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special6"
+      ],
+      "id": 12,
+      "file": "fs_012_poem_special6.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special7a"
+      ],
+      "id": 13,
+      "file": "fs_013_poem_special7a.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special7b"
+      ],
+      "id": 14,
+      "file": "fs_014_poem_special7b.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special8"
+      ],
+      "id": 15,
+      "file": "fs_015_poem_special8.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_background",
+      "image": [
+        "poem_special9"
+      ],
+      "id": 16,
+      "file": "fs_016_poem_special9.png",
+      "width": 320,
+      "height": 240,
+      "screen_x": 0,
+      "screen_y": 0,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "veins"
+      ],
+      "id": 17,
+      "file": "ovl_017_veins.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "vignette"
+      ],
+      "id": 18,
+      "file": "ovl_018_vignette.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "y_glitch_head"
+      ],
+      "id": 19,
+      "file": "ovl_019_y_glitch_head.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_kill",
+        "3a"
+      ],
+      "id": 60,
+      "file": "bg_060_y_kill-cond-images-cg-y_kill-3a.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_kill",
+        "3c"
+      ],
+      "id": 61,
+      "file": "bg_061_y_kill-cond-images-cg-y_kill-3c.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_kill",
+        "3b"
+      ],
+      "id": 62,
+      "file": "bg_062_y_kill-cond-images-cg-y_kill-3b.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_kill",
+        "2c"
+      ],
+      "id": 63,
+      "file": "bg_063_y_kill-cond-images-cg-y_kill-2c.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_kill",
+        "2b"
+      ],
+      "id": 64,
+      "file": "bg_064_y_kill-cond-images-cg-y_kill-2b.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_kill",
+        "2a"
+      ],
+      "id": 65,
+      "file": "bg_065_y_kill-cond-images-cg-y_kill-2a.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_kill",
+        "1c"
+      ],
+      "id": 66,
+      "file": "bg_066_y_kill-cond-images-cg-y_kill-1c.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_kill",
+        "1b"
+      ],
+      "id": 67,
+      "file": "bg_067_y_kill-cond-images-cg-y_kill-1b.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "background",
+      "image": [
+        "y_kill",
+        "1a"
+      ],
+      "id": 68,
+      "file": "bg_068_y_kill-cond-images-cg-y_kill-1a.png",
+      "width": 320,
+      "height": 180,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "yuri",
+        "eyes"
+      ],
+      "id": 20,
+      "file": "ovl_020_yuri_eyes.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "yuri",
+        "eyes_base"
+      ],
+      "id": 21,
+      "file": "ovl_021_yuri_eyes_base.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "screen_layer",
+      "image": [
+        "yuripupils"
+      ],
+      "id": 22,
+      "file": "ovl_022_yuripupils.png",
+      "width": 320,
+      "height": 180,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
+    },
+    {
+      "kind": "fullscreen_layer",
+      "image": [
+        "black",
+        "layer"
+      ],
+      "id": 0,
+      "file": "fsl_000_black_layer.png",
+      "width": 1,
+      "height": 1,
+      "screen_x": 0,
+      "screen_y": 20,
+      "introduced_act": 2
     }
   ],
   "unresolved": [
@@ -11990,5 +14416,79 @@
       ],
       "reason": "no Image definition found"
     }
-  ]
+  ],
+  "variants": {
+    "y_kill": [
+      {
+        "condition": "persistent.yuri_kill >= 1380",
+        "image": [
+          "y_kill",
+          "3a"
+        ]
+      },
+      {
+        "condition": "persistent.yuri_kill >= 1180",
+        "image": [
+          "y_kill",
+          "3c"
+        ]
+      },
+      {
+        "condition": "persistent.yuri_kill >= 1120",
+        "image": [
+          "y_kill",
+          "3b"
+        ]
+      },
+      {
+        "condition": "persistent.yuri_kill >= 920",
+        "image": [
+          "y_kill",
+          "3a"
+        ]
+      },
+      {
+        "condition": "persistent.yuri_kill >= 720",
+        "image": [
+          "y_kill",
+          "2c"
+        ]
+      },
+      {
+        "condition": "persistent.yuri_kill >= 660",
+        "image": [
+          "y_kill",
+          "2b"
+        ]
+      },
+      {
+        "condition": "persistent.yuri_kill >= 460",
+        "image": [
+          "y_kill",
+          "2a"
+        ]
+      },
+      {
+        "condition": "persistent.yuri_kill >= 260",
+        "image": [
+          "y_kill",
+          "1c"
+        ]
+      },
+      {
+        "condition": "persistent.yuri_kill >= 200",
+        "image": [
+          "y_kill",
+          "1b"
+        ]
+      },
+      {
+        "condition": null,
+        "image": [
+          "y_kill",
+          "1a"
+        ]
+      }
+    ]
+  }
 }
