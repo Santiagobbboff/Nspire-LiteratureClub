@@ -72,7 +72,9 @@ download does not include the prebuilt launcher. Generate a pack using the
 converter from the same release, then transfer both files into one calculator folder:
 
 - `ddlc.tns` — launcher attached to the GitHub Release, or built from source.
-- `ddlc.nzp.tns` — content pack generated from your installation.
+- `ddlc.nzp.tns` — content pack generated from your installation, plus `ddlc.nzp2.tns`
+  (and so on) when the converter split it: transfers above about 10 MB tend to stall,
+  so the pack is cut into parts the launcher reads as one file. Keep them together.
 
 Open `ddlc.tns`.
 

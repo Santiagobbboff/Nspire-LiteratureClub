@@ -70,6 +70,8 @@ bits 2-5 and land in the existing gallery mask, so Act 1 event indices do not mo
 - Dialogue: `{glitch=N}` renders N random glyphs from the alphabet; the "edited" style
   uses VerilySerifMono glyphs in the private bank 0xEA00. Yuri's y2/y3 fonts use banks
   0xEC00/0xEE00; `poem_y1`/`poem_y2` papers ship as extra poem backgrounds.
+- The converter splits packs above 9.5 MB into `ddlc.nzp.tns`, `ddlc.nzp2.tns`, ...
+  (`--split-mb`); the launcher opens consecutive parts as one file.
 - Resource kinds: `screen_layer` (320×180 RGBA overlays such as noise, vignette, blood,
   the eyes), `fullscreen_layer` (black/white fills shown as layers), and
   `fullscreen_background` (320×240 special poem sheets, `bsod`, `paper_glitch`, intro).
