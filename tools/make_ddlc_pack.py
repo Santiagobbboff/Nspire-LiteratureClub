@@ -121,7 +121,7 @@ def preserve_art_layout(baked, output):
         new = images.get(tuple(row["image"]))
         if new is None or new["kind"] != row["kind"]:
             raise ConversionError("Original installation does not match the supported art layout")
-        if row["kind"] == "background":
+        if "layers" not in row:
             pairs = [(row, new)]
         else:
             if len(row["layers"]) != len(new["layers"]):
@@ -135,7 +135,30 @@ def preserve_art_layout(baked, output):
             if old_file not in copied:
                 shutil.copy2(baked / "img" / new_part["file"], output / "img" / old_file)
                 copied.add(old_file)
+    layout["variants"] = fresh.get("variants", {})
     (output / "assets.json").write_text(json.dumps(layout, indent=2), encoding="utf-8")
+
+
+def split_pack(output, split_mb):
+    """Cut the pack into consecutive parts the launcher reads as one file."""
+    limit = int(split_mb * 1024 * 1024)
+    at = output.name.rfind(".nzp")
+    if limit <= 0 or at < 0:
+        return [output]
+    for index in range(2, 10):  # stale parts from a previous, larger pack
+        stale = output.with_name(output.name[:at + 4] + str(index) + output.name[at + 4:])
+        if stale.exists():
+            stale.unlink()
+    data = output.read_bytes()
+    if len(data) <= limit:
+        return [output]
+    parts = [output]
+    output.write_bytes(data[:limit])
+    for index, start in enumerate(range(limit, len(data), limit), start=2):
+        part = output.with_name(output.name[:at + 4] + str(index) + output.name[at + 4:])
+        part.write_bytes(data[start:start + limit])
+        parts.append(part)
+    return parts
 
 
 def run_stage(*args):
@@ -172,6 +195,9 @@ def main():
                         help="Destination pack file (default: dist/ndless/ddlc.nzp.tns)")
     parser.add_argument("--work-dir", type=Path, help="New or empty private conversion directory")
     parser.add_argument("--extract-only", action="store_true", help="Extract only; no Pillow/NumPy needed")
+    parser.add_argument("--split-mb", type=float, default=9.5,
+                        help="Split the pack into ddlc.nzp.tns, ddlc.nzp2.tns, ... parts of at most this "
+                             "many MB (transfers above about 10 MB to the calculator stall); 0 = one file")
     args = parser.parse_args()
     if sys.version_info < (3,11):
         parser.error("Python 3.11 or newer is required")
@@ -211,6 +237,10 @@ def main():
             report.update(output=str(output), output_bytes=output.stat().st_size,
                           output_sha256=digest(output), save_format="DDS")
             print(f"Pack ready: {output} ({output.stat().st_size:,} bytes)", flush=True)
+            parts = split_pack(output, args.split_mb)
+            if len(parts) > 1:
+                report["parts"] = [str(part) for part in parts]
+                print("Transfer every part together: " + ", ".join(part.name for part in parts), flush=True)
         (work / "conversion-report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
         print(f"Private conversion files retained in: {work}", flush=True)
         print("Do not publish the generated pack, extracted assets or readable game script.")

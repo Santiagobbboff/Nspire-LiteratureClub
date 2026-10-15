@@ -20,7 +20,7 @@ from typing import Any
 
 from PIL import Image
 
-from rpyc_ast import flatten, kind, load_rpyc
+from rpyc_ast import flatten, kind, load_rpyc, pycode_source
 
 CHARACTERS = {"s": "sayori", "n": "natsuki", "y": "yuri", "m": "monika"}
 SPEAKERS = {
@@ -64,10 +64,14 @@ def main() -> int:
                                       "kind": "prescaled_sprite"})
                     resource_names_seen.add(part["name"])
         else:
-            name = f"{'bg' if row['kind'] == 'background' else 'sprite'}_{row['id']:03d}"
+            prefix = {"background": "bg", "screen_layer": "ovl", "fullscreen_layer": "fsl",
+                      "fullscreen_background": "fs"}.get(row["kind"], "sprite")
+            name = f"{prefix}_{row['id']:03d}"
             resource_name[image] = name
-            resources.append({"name": name, "path": f"img/{row['file']}",
-                              "kind": row["kind"]})
+            entry = {"name": name, "path": f"img/{row['file']}", "kind": row["kind"]}
+            if "screen_y" in row:
+                entry["screen_x"], entry["screen_y"] = row.get("screen_x", 0), row["screen_y"]
+            resources.append(entry)
 
     # The simplified DDLC title menu intentionally uses a plain black backdrop
     # until the real menu artwork is adapted for the Nspire layout.
@@ -118,6 +122,7 @@ def main() -> int:
     skipped: dict[str, int] = {}
     unknown_vars: set[str] = set()
     ended = False
+    pending_clear: list[int] = []  # persistent.clear[k] waiting for the next dialogue line
 
     def report_skip(reason: str) -> None:
         skipped[reason] = skipped.get(reason, 0) + 1
@@ -273,9 +278,17 @@ def main() -> int:
                     "op": "say", "speaker_en": SPEAKERS.get(who, ""), "text_en": text,
                     "script": script_file, "line": int(getattr(node, "linenumber", 0)),
                 })
+                if pending_clear:
+                    events[-1]["clear_cg"] = pending_clear.pop(0)
             elif node_kind == "Return":
                 return
-            elif node_kind in {"With", "Python", "UserStatement", "Pass"}:
+            elif node_kind == "Python":
+                source = (pycode_source(node.code) or "").strip()
+                clear = re.fullmatch(r"persistent\.clear\[(\d+)\] = True", source)
+                if clear:
+                    pending_clear.append(int(clear.group(1)))
+                continue
+            elif node_kind in {"With", "UserStatement", "Pass"}:
                 # Transitions/audio/initialization don't affect this simplified
                 # linear playback. Crucially, none of these execute game code.
                 continue
@@ -284,6 +297,7 @@ def main() -> int:
 
     if not label.block or kind(label.block[-1]) != "Return":
         raise SystemExit("ch0_main ended without its Return; refusing a truncated build")
+    events.append({"op": "label", "name": "act1_start"})
     compile_nodes(label.block, "script-ch0.rpyc", "ch0_main")
 
     # Replace the Ren'Py poem UI with a simple 20-round word selector. Each
@@ -953,6 +967,15 @@ def main() -> int:
             position += 1
     manifest["ddlc"] = {"playable_days": 6, "minimum_choice_capacity": 128,
                          "labels": label_positions}
+    # Act dispatch (compile_act2) decides where a New Game begins; Act 1
+    # event indices stay untouched so older DDS saves still replay.
+    manifest["start_label"] = "act_dispatch"
+    from compile_act2 import GLITCH_ALPHABET
+    manifest["glitch_alphabet"] = GLITCH_ALPHABET
+    manifest["edited_font"] = str((raw_dir / "gui/font/VerilySerifMono.otf").resolve())
+    manifest["character_files"] = [str((raw_dir / f"{name}.chr").resolve())
+                                   if (raw_dir / f"{name}.chr").is_file() else None
+                                   for name in ("monika", "natsuki", "sayori", "yuri")]
     build_pack(
         manifest,
         args.font.resolve(),

@@ -286,7 +286,8 @@ bool skip_tag(std::string_view s, size_t& at, bool* italic = nullptr, bool* bold
 }
 bool text_space(uint32_t cp) {
   // Each poem font has its own space advance, including authors sharing a size.
-  return cp == ' ' || cp == 0xE220 || cp == 0xE420 || cp == 0xE620 || cp == 0xE820;
+  return cp == ' ' || cp == 0xE220 || cp == 0xE420 || cp == 0xE620 || cp == 0xE820 || cp == 0xEA20 ||
+         cp == 0xEC20 || cp == 0xEE20;
 }
 bool cjk_opening_punctuation(uint32_t cp) {
   switch (cp) {

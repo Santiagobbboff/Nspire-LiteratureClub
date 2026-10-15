@@ -4,14 +4,18 @@
 
 # Nspire Literature Club 
 
-An unofficial port of DDLC Act 1 for the **TI-Nspire CX II with Ndless**.
+An unofficial port of DDLC (all four acts) for the **TI-Nspire CX II with Ndless**.
 Not affiliated with or endorsed by Team Salvato. Please play the original game first!
 [ddlc.moe](https://ddlc.moe).
 
 Full Act 1 (days 1-6) is playable and content complete, including route-dependent CGs,
-three scored poem rounds, the original poems and an ending.
-
-This version doesn't include any external game mechanics like character deletion from the original yet!
+three scored poem rounds, the original poems and an ending. Act 2 follows after the
+ending: the glitched restart, the second week with its poems, special poems, the
+weekend, Monika's room, the epilogue and the credits. The character files appear
+(and disappear) in a `characters` folder next to the pack; to leave Monika's room,
+quit the game, delete `characters/monika.chr.tns` in the document browser and
+relaunch. The pack is about 16.7 MB, so keep enough free space on the calculator.
+See [docs/LATER_ACTS.md](docs/LATER_ACTS.md) for details.
 
 ## How to Generate a Content Pack
 
@@ -68,7 +72,9 @@ download does not include the prebuilt launcher. Generate a pack using the
 converter from the same release, then transfer both files into one calculator folder:
 
 - `ddlc.tns` — launcher attached to the GitHub Release, or built from source.
-- `ddlc.nzp.tns` — content pack generated from your installation.
+- `ddlc.nzp.tns` — content pack generated from your installation, plus `ddlc.nzp2.tns`
+  (and so on) when the converter split it: transfers above about 10 MB tend to stall,
+  so the pack is cut into parts the launcher reads as one file. Keep them together.
 
 Open `ddlc.tns`.
 
@@ -91,8 +97,6 @@ or compile it yourself from /tools/desktop-preview/ to play it through a Windows
 Just put the .exe file next to your content pack, and launch the game!
 
 ## Future Goals and issues
-Port the rest of the game 
- 
 Add animations and transitions
 
   

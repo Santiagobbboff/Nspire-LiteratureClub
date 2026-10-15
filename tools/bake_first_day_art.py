@@ -155,7 +155,10 @@ def main() -> int:
             "layers": layers,
         })
 
+    from bake_act2_art import bake_act2
+    variants = bake_act2(raw_dir, resolver, args.output_dir, resources, unresolved)
     summary = {
+        "variants": variants,
         "screen": {"width": 320, "height": 240, "color_depth": 16},
         "scaling": "DDLC original 1280x720 scene mapped to 320x180; sprites at 0.80 x 0.25",
         "sprite_anchor": "Ren'Py x-center and bottom anchor, with stored crop offsets",

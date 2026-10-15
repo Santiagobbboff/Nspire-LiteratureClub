@@ -134,6 +134,12 @@ public:
   bool overlay_visible() const {
     return !overlay_text_.empty() && overlay_opacity_ != 0;
   }
+  int16_t persistent_value(PersistentKey key) const {
+    return persistent_values_[static_cast<size_t>(key)];
+  }
+  bool effect_active() const { return effect_kind_ != 0; }
+  const std::array<int16_t, story_state_slots>& story_state() const { return story_state_; }
+  const std::array<int16_t, persistent_value_count>& persistent_values() const { return persistent_values_; }
 
 private:
   enum class StartupPhase : uint8_t { none, notice, fade_to_white, fade_to_menu };
@@ -142,6 +148,18 @@ private:
   uint32_t startup_elapsed_ms_{};
   static constexpr uint32_t startup_fade_ms = 1200;
   bool cutscene_locked_{};
+  // Act 2 persistent values (DDGP "DDP3" section) and screen effects.
+  std::array<int16_t, persistent_value_count> persistent_values_{};
+  uint8_t effect_kind_{};
+  uint32_t effect_left_{}, effect_elapsed_{}, effect_seed_{};
+  int effect_param_{};
+  static constexpr uint32_t wait_for_input = 0xffffffffu;
+  std::string expand_glitch(std::string_view text, uint32_t seed) const;
+  void screen_effects(uint16_t* dst) const;
+  void delete_all_saves();
+  void write_character_files(unsigned mask = 15) const;
+  void delete_character_file(size_t index) const;
+  bool character_file_exists(size_t index) const;
   bool credits_roll_active_{};
   uint32_t credits_roll_ms_{};
   static constexpr uint32_t credits_delay_ms = 5000;

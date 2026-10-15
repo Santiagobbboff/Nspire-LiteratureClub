@@ -2,7 +2,9 @@
 #include <algorithm>
 #include <climits>
 #include <cstdio>
+#include <cstdint>
 #include <cstring>
+#include <string>
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -12,15 +14,75 @@
 
 namespace nzato {
 namespace {
-template <class T> bool read(FILE* f, T& v) {
-  return std::fread(&v, sizeof(v), 1, f) == 1;
+// A pack may be split into consecutive part files (ddlc.nzp.tns, ddlc.nzp2.tns, ...)
+// because large single transfers to the calculator are unreliable. Reads and
+// seeks address the concatenation.
+struct PackFile {
+  std::vector<FILE*> parts;
+  std::vector<uint64_t> starts; // starts[i] = offset of part i; starts.back() = total size
+  uint64_t pos{};
+  bool add(FILE* f) {
+    if (!f) return false;
+    if (std::fseek(f, 0, SEEK_END) != 0) return false;
+    const long size = std::ftell(f);
+    if (size < 0) return false;
+    if (starts.empty()) starts.push_back(0);
+    parts.push_back(f);
+    starts.push_back(starts.back() + static_cast<uint64_t>(size));
+    return true;
+  }
+  uint64_t size() const { return starts.empty() ? 0 : starts.back(); }
+  uint64_t tell() const { return pos; }
+  bool seek(uint64_t to) {
+    if (to > size()) return false;
+    pos = to;
+    return true;
+  }
+  size_t stream_part{SIZE_MAX};
+  uint64_t stream_pos{};
+  size_t read(void* out, size_t n) {
+    size_t done = 0;
+    uint8_t* target = static_cast<uint8_t*>(out);
+    while (done < n && pos < size()) {
+      size_t part = 0;
+      while (part + 1 < parts.size() && pos >= starts[part + 1]) ++part;
+      const uint64_t local = pos - starts[part];
+      const size_t available = static_cast<size_t>(std::min<uint64_t>(n - done, starts[part + 1] - pos));
+      // Sequential reads skip the seek; flash seeks are not free on the calculator.
+      if (part != stream_part || local != stream_pos) {
+        if (std::fseek(parts[part], static_cast<long>(local), SEEK_SET) != 0) break;
+      }
+      const size_t got = std::fread(target + done, 1, available, parts[part]);
+      stream_part = part;
+      stream_pos = local + got;
+      pos += got;
+      done += got;
+      if (got != available) break;
+    }
+    return done;
+  }
+  void close() {
+    for (FILE* f : parts) std::fclose(f);
+    parts.clear();
+    starts.clear();
+    pos = 0;
+  }
+};
+template <class T> bool read(PackFile* f, T& v) {
+  return f->read(&v, sizeof(v)) == sizeof(v);
 }
-bool bytes(FILE* f, void* p, size_t n) {
-  return n == 0 || std::fread(p, 1, n, f) == n;
+bool bytes(PackFile* f, void* p, size_t n) {
+  return n == 0 || f->read(p, n) == n;
 }
-uint32_t position(FILE* f) {
-  const long value = std::ftell(f);
-  return value < 0 ? UINT32_MAX : static_cast<uint32_t>(value);
+uint32_t position(PackFile* f) {
+  const uint64_t value = f->tell();
+  return value > UINT32_MAX ? UINT32_MAX : static_cast<uint32_t>(value);
+}
+std::string part_name(const std::string& path, int index) {
+  // "ddlc.nzp.tns" -> "ddlc.nzp2.tns", "ddlc.nzp" -> "ddlc.nzp2"
+  const size_t at = path.rfind(".nzp");
+  if (at == std::string::npos) return {};
+  return path.substr(0, at + 4) + std::to_string(index) + path.substr(at + 4);
 }
 #pragma pack(push, 1)
 struct Header {
@@ -69,7 +131,9 @@ Pack::~Pack() {
 
 void Pack::close_file() {
   if (file_) {
-    std::fclose(static_cast<FILE*>(file_));
+    auto* f = static_cast<PackFile*>(file_);
+    f->close();
+    delete f;
     file_ = nullptr;
   }
 }
@@ -80,15 +144,26 @@ bool Pack::load(const char* path) {
   const char* slash2 = std::strrchr(path, '\\');
   const char* slash = slash1 > slash2 ? slash1 : slash2;
   directory_ = slash ? std::string(path, static_cast<size_t>(slash - path + 1)) : std::string{};
-  FILE* f = nullptr;
+  auto* f = new PackFile;
+  auto open_part = [](const std::string& name) {
+    FILE* file = nullptr;
 #ifdef _MSC_VER
-  fopen_s(&f, path, "rb");
+    fopen_s(&file, name.c_str(), "rb");
 #else
-  f = std::fopen(path, "rb");
+    file = std::fopen(name.c_str(), "rb");
 #endif
-  if (!f) {
+    return file;
+  };
+  if (!f->add(open_part(path))) {
+    delete f;
     error_ = "cannot open pack";
     return false;
+  }
+  for (int index = 2; index < 10; ++index) {
+    const std::string name = part_name(path, index);
+    FILE* part = name.empty() ? nullptr : open_part(name);
+    if (!part) break;
+    f->add(part);
   }
   return load_file(f);
 }
@@ -96,11 +171,22 @@ bool Pack::load(const char* path) {
 #ifdef _WIN32
 bool Pack::load(const wchar_t* path) {
   close_file();
-  FILE* f = nullptr;
-  _wfopen_s(&f, path, L"rb");
-  if (!f) {
+  auto* f = new PackFile;
+  FILE* first = nullptr;
+  _wfopen_s(&first, path, L"rb");
+  if (!f->add(first)) {
+    delete f;
     error_ = "cannot open pack";
     return false;
+  }
+  std::wstring wide(path);
+  const size_t at = wide.rfind(L".nzp");
+  for (int index = 2; at != std::wstring::npos && index < 10; ++index) {
+    const std::wstring name = wide.substr(0, at + 4) + std::to_wstring(index) + wide.substr(at + 4);
+    FILE* part = nullptr;
+    _wfopen_s(&part, name.c_str(), L"rb");
+    if (!part) break;
+    f->add(part);
   }
   const wchar_t *a = wcsrchr(path, L'/'), *b = wcsrchr(path, L'\\'), *slash = a > b ? a : b;
   const int chars = slash ? static_cast<int>(slash - path + 1) : 0;
@@ -114,10 +200,11 @@ bool Pack::load(const wchar_t* path) {
 #endif
 
 bool Pack::load_file(void* handle) {
-  FILE* f = static_cast<FILE*>(handle);
+  auto* f = static_cast<PackFile*>(handle);
   auto fail = [&](const char* message) {
     error_ = message;
-    std::fclose(f);
+    f->close();
+    delete f;
     return false;
   };
 
@@ -208,16 +295,15 @@ bool Pack::load_file(void* handle) {
         return fail("invalid story choice");
       for (size_t option = i + 1; option <= i + event.resource; ++option)
         if (static_cast<Op>(event_disks[option].op) != Op::choice_option ||
-            event_disks[option].x < 0 ||
-            static_cast<uint16_t>(event_disks[option].x) >= h.events)
+            event_disks[option].speaker.offset >= h.events)
           return fail("invalid story choice option");
       break;
     case Op::choice_option:
-      if (event.x < 0 || static_cast<uint16_t>(event.x) >= h.events)
+      if (event.speaker.offset >= h.events)
         return fail("invalid story choice target");
       break;
     case Op::jump:
-      if (event.resource >= h.events || event.resource > 32767)
+      if (event.speaker.offset >= h.events)
         return fail("invalid story jump");
       break;
     case Op::set_state:
@@ -225,7 +311,7 @@ bool Pack::load_file(void* handle) {
         return fail("invalid story state slot");
       break;
     case Op::if_state:
-      if (event.resource >= story_state_slots || event.y < 0 || static_cast<uint16_t>(event.y) >= h.events)
+      if (event.resource >= story_state_slots || event.speaker.offset >= h.events)
         return fail("invalid story condition");
       break;
     case Op::add_state:
@@ -233,9 +319,20 @@ bool Pack::load_file(void* handle) {
         return fail("invalid story state slot");
       break;
     case Op::if_state_gt:
-      if (event.resource >= story_state_slots || event.x < 0 || event.x >= story_state_slots || event.y < 0 ||
-          static_cast<uint16_t>(event.y) >= h.events)
+      if (event.resource >= story_state_slots || event.x < 0 || event.x >= story_state_slots ||
+          event.speaker.offset >= h.events)
         return fail("invalid story comparison");
+      break;
+    case Op::persistent_load:
+    case Op::persistent_store:
+      if (event.resource >= story_state_slots || event.x < 0 ||
+          static_cast<size_t>(event.x) >= persistent_value_count)
+        return fail("invalid persistent access");
+      break;
+    case Op::rand_state:
+      if (event.resource >= story_state_slots || event.x < 1 || event.x > 16 ||
+          (event.y >= 0 && event.y >= static_cast<int>(story_state_slots)))
+        return fail("invalid random state");
       break;
     default:
       break;
@@ -266,14 +363,11 @@ bool Pack::load_file(void* handle) {
   }
   for (const auto& d : event_disks)
     add_event(d);
-  if (offset > static_cast<uint64_t>(LONG_MAX) || std::fseek(f, 0, SEEK_END) != 0)
-    return fail("invalid payload size");
-  const long file_size = std::ftell(f);
-  if (file_size < 0 || static_cast<uint64_t>(file_size) < offset)
+  const uint64_t file_size = f->size();
+  if (file_size < offset)
     return fail("truncated payload");
   if (h.flags & 4) {
-    if (static_cast<uint64_t>(file_size) < offset + sizeof(UiFooter) ||
-        std::fseek(f, static_cast<long>(offset), SEEK_SET) != 0)
+    if (file_size < offset + sizeof(UiFooter) || !f->seek(offset))
       return fail("truncated UI metadata");
     UiFooter footer{};
     if (!read(f, footer) || std::memcmp(footer.magic, "NZUI", 4) != 0)
@@ -291,10 +385,10 @@ bool Pack::load_file(void* handle) {
   }
 
   if (h.flags & 8) {
-    if (!(h.flags & 4) || static_cast<uint64_t>(file_size) < offset + sizeof(UiFooter) + sizeof(DdlcUiFooter))
+    if (!(h.flags & 4) || file_size < offset + sizeof(UiFooter) + sizeof(DdlcUiFooter))
       return fail("truncated DDLC UI metadata");
     DdlcUiFooter footer{};
-    if (!read(f, footer) || std::memcmp(footer.magic, "DDUI", 4) || footer.version != 2)
+    if (!read(f, footer) || std::memcmp(footer.magic, "DDUI", 4) || footer.version != 3)
       return fail("Regenerate the DDLC pack with the current converter");
     const auto valid = [&](uint16_t id) {
       const Image* image = image_metadata(id);
@@ -319,12 +413,38 @@ bool Pack::load_file(void* handle) {
       for (const unsigned char c : word.text)
         if (c < 32 || c > 126) return fail("invalid DDLC poem word text");
     }
+    // Version 3: start event, glitch alphabet, embedded character files.
+    if (!read(f, start_event_) || start_event_ >= h.events)
+      return fail("invalid DDLC start event");
+    uint16_t alphabet_count = 0;
+    if (!read(f, alphabet_count) || alphabet_count > 512)
+      return fail("invalid DDLC glitch alphabet");
+    glitch_alphabet_.resize(alphabet_count);
+    for (auto& cp : glitch_alphabet_)
+      if (!read(f, cp)) return fail("truncated DDLC glitch alphabet");
+    for (auto& blob : character_files_) {
+      uint32_t size = 0;
+      if (!read(f, size) || size > (1U << 20)) return fail("invalid DDLC character file");
+      const uint32_t at = position(f);
+      if (at == UINT32_MAX || !f->seek(f->tell() + size))
+        return fail("truncated DDLC character file");
+      blob = {at, size};
+    }
   }
   if (has_poems() && !ddlc_title_id_)
     return fail("DDLC pack needs regeneration with the current converter");
   file_ = f;
   error_ = "";
   return true;
+}
+
+bool Pack::read_character_file(size_t index, std::vector<uint8_t>& out) const {
+  if (index >= character_files_.size() || !file_ || !character_files_[index].size)
+    return false;
+  auto* f = static_cast<PackFile*>(file_);
+  const auto& blob = character_files_[index];
+  out.resize(blob.size);
+  return f->seek(blob.offset) && bytes(f, out.data(), out.size());
 }
 
 bool Pack::image_pinned(uint16_t id) const {
@@ -379,9 +499,8 @@ bool Pack::load_image(Image& image) const {
       return false;
     }
 
-    FILE* f = static_cast<FILE*>(file_);
-    if (image.data_offset > static_cast<uint32_t>(LONG_MAX) ||
-        std::fseek(f, static_cast<long>(image.data_offset), SEEK_SET) != 0) {
+    auto* f = static_cast<PackFile*>(file_);
+    if (!f->seek(image.data_offset)) {
       error_ = "cannot seek image delta";
       return false;
     }
@@ -427,9 +546,8 @@ bool Pack::load_image(Image& image) const {
   const size_t total = static_cast<size_t>(image.palette_entries) * sizeof(uint16_t) +
                        static_cast<size_t>(image.pixel_bytes) * (image.alpha ? 2U : 1U);
   trim_image_cache(total, image.id);
-  FILE* f = static_cast<FILE*>(file_);
-  if (image.data_offset > static_cast<uint32_t>(LONG_MAX) ||
-      std::fseek(f, static_cast<long>(image.data_offset), SEEK_SET) != 0) {
+  auto* f = static_cast<PackFile*>(file_);
+  if (!f->seek(image.data_offset)) {
     error_ = "cannot seek image";
     return false;
   }
@@ -485,8 +603,8 @@ bool Pack::load_glyph(Glyph& glyph) const {
   }
   auto& block = glyph_blocks_[glyph_block_count_ - 1];
   uint8_t* const target = block.data() + glyph_block_used_;
-  FILE* f = static_cast<FILE*>(file_);
-  if (std::fseek(f, static_cast<long>(glyph.data_offset), SEEK_SET) != 0) {
+  auto* f = static_cast<PackFile*>(file_);
+  if (!f->seek(glyph.data_offset)) {
     error_ = "cannot seek glyph";
     return false;
   }

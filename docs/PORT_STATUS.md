@@ -15,8 +15,14 @@ Updated 2026-10-10.
 - First-run unofficial-port notice, remembered acknowledgement and two slow white fades.
 - Original poem words/scores supplied by the player's generated pack, not embedded in source.
 
-Act 2, audio, full Ren'Py transition fidelity, random Easter eggs and poem chibi
-feedback animations are not implemented.
+- Acts 2-4 (2026-10-14): the glitched restart, days ch20-ch23 with the second poem
+  responses and exclusives, special poems, Yuri's death and the weekend loop with
+  its launch-resume behaviour, Monika's room with all her topics and the character
+  file deletion that ends it, the club epilogue with both endings, and the credits.
+  Character files are real files next to the pack. See [LATER_ACTS](LATER_ACTS.md).
+
+Audio, full Ren'Py transition fidelity, random Easter eggs and poem chibi feedback
+animations are not implemented.
 
 ## Release folder
 
@@ -25,10 +31,11 @@ licenses and current documentation. Private work, generated packs, extracted gam
 content, backups, obsolete upstream tools and old development documents were removed.
 `dist/ndless/ddlc.tns` is the launcher release artifact; no content pack is bundled.
 
-A locally generated pack contains 31,712 events and 274 art resources, and is
-9,876,789 bytes. At the 32,768-event ceiling, 1,056 event slots remain; revisit
-capacity/compiler expansion before Act 2. DDLC save/settings filenames are
-`ddlc-0.sav.tns` through `ddlc-23.sav.tns` and `ddlc.sav.tns`.
+A locally generated full pack (Acts 1-4) contains about 61,200 events and about 390
+art resources, and is about 16.7 MB. Branch targets are 32-bit since the DDUI version 3
+format, so the former 32,768-event ceiling no longer applies. DDLC save/settings
+filenames are `ddlc-0.sav.tns` through `ddlc-23.sav.tns` and `ddlc.sav.tns`; the
+character files are written to `characters/<name>.chr.tns` beside the pack.
 
 ## Build evidence and limits
 

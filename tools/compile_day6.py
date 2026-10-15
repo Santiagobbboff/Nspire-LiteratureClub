@@ -16,9 +16,15 @@ class Day6Compiler(Day5Compiler):
             call = ast.parse(source).body[0].value
             seconds = ast.literal_eval(call.args[0])
             self.events.append({"op": "pause", "duration_ms": round(seconds * 1000)})
-        elif source.startswith(("persistent.playthrough =", "persistent.anticheat =",
-                                "delete_character(", "in_sayori_kill =", "try: sys.modules")):
-            # No file deletion, actual crashes or Act 2 persistent progression.
+        elif source == "persistent.playthrough = 1":
+            # Act 1 finale: unlock Act 2 for the next New Game (DDUI v3 packs).
+            self.set(8, 1)
+            self.events.append({"op": "persistent_store", "state": 8, "key": 0})
+        elif source == 'delete_character("sayori")':
+            self.events.append({"op": "system", "action": 2, "arg": 2})
+        elif source.startswith(("persistent.anticheat =", "delete_character(",
+                                "in_sayori_kill =", "try: sys.modules")):
+            # No actual crashes; other persistent values are not modelled.
             self.report_skip("Act 1 finale persistent/filesystem simulation")
         else:
             super().python(node)
@@ -34,7 +40,7 @@ class Day6Compiler(Day5Compiler):
                 self.events.append({"op": "scene", "resource": resource})
             return
         super().linear_node(node, script)
-        if kind(node) == "Say" and node.linenumber == 217:
+        if kind(node) == "Say" and node.linenumber == 217 and script == "script-ch5.rpyc":
             # Mark the existing room-entry line without shifting save cursors.
             self.events[-1]["lock_skip"] = True
 
@@ -66,4 +72,11 @@ def extend_day6(previous):
     compiler.label("day6_start")
     compiler.invoke("ch5_main")
     compiler.label("act1_credits")
-    compiler.events.append({"op": "end", "flags": 2})
+    # Original `endgame`: the END card, then the main menu; Act 2 starts on the next New Game.
+    end_row = compiler.assets.get(("end",))
+    if end_row is not None and end_row.get("kind") == "fullscreen_background":
+        compiler.events.append({"op": "scene", "resource": f"fs_{end_row['id']:03d}"})
+        compiler.events.append({"op": "pause", "duration_ms": 4000})
+    compiler.events.append({"op": "end", "flags": 0})
+    from compile_act2 import extend_act2
+    extend_act2(compiler)

@@ -4,6 +4,11 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#endif
 
 namespace nzato {
 namespace {
@@ -31,6 +36,12 @@ struct PersistentHead {
   char magic[4];
   uint64_t gallery;
 };
+#pragma pack(push, 1)
+struct PersistentValues {
+  char magic[4]; // "DDP4" (32 values); "DDP3" packs held 16
+  int16_t values[persistent_value_count];
+};
+#pragma pack(pop)
 
 void append_text(char*& out, char* end, const char* text) {
   while (*text && out < end)
@@ -110,6 +121,13 @@ void Player::load_persistent() {
     uint8_t seen = 0;
     if (ddlc_ui_ && std::fread(&seen, 1, 1, file) == 1 && seen == 1)
       notice_seen_ = true;
+    PersistentValues values{};
+    if (ddlc_ui_ && std::fread(&values.magic, 4, 1, file) == 1) {
+      const size_t count = std::memcmp(values.magic, "DDP4", 4) == 0 ? persistent_value_count
+                           : std::memcmp(values.magic, "DDP3", 4) == 0 ? 16 : 0;
+      if (count && std::fread(values.values, sizeof(int16_t), count, file) == count)
+        std::copy(values.values, values.values + count, persistent_values_.begin());
+    }
   }
   std::fclose(file);
 }
@@ -134,8 +152,111 @@ void Player::save_persistent() const {
     std::fwrite(&mode, 1, 1, file);
     const uint8_t seen = notice_seen_ ? 1 : 0;
     std::fwrite(&seen, 1, 1, file);
+    PersistentValues values{};
+    std::memcpy(values.magic, "DDP4", 4);
+    std::copy(persistent_values_.begin(), persistent_values_.end(), std::begin(values.values));
+    std::fwrite(&values, sizeof(values), 1, file);
   }
   std::fclose(file);
+}
+
+void Player::delete_all_saves() {
+  for (int slot = 0; slot < static_cast<int>(saves_.size()); slot++) {
+    char name[512];
+    save_name(name, sizeof(name), pack_.chinese(), ddlc_ui_, slot, pack_.directory());
+    std::remove(name);
+    saves_[slot] = {};
+  }
+  release_save_cache();
+}
+
+namespace {
+// characters/<name>.chr.tns beside the pack, or <name>.chr.tns in the pack
+// folder itself when the subfolder cannot be created (flat = true).
+void character_path(char* output, size_t size, std::string_view directory, size_t index,
+                    bool flat) {
+  if (!size)
+    return;
+  char* out = output;
+  char* const end = output + size - 1;
+  append_text(out, end, directory);
+  if (!flat)
+    append_text(out, end, "characters/");
+  append_text(out, end, character_file_names[index]);
+#ifdef _WIN32
+  append_text(out, end, ".chr");
+#else
+  append_text(out, end, ".chr.tns");
+#endif
+  *out = '\0';
+}
+bool ensure_character_directory(std::string_view directory) {
+  std::string path(directory);
+  path += "characters";
+#ifdef _WIN32
+  _mkdir(path.c_str());
+#else
+  mkdir(path.c_str(), 0755);
+#endif
+  std::string probe = path + "/.probe.tns";
+  FILE* file = std::fopen(probe.c_str(), "wb");
+  if (!file)
+    return false;
+  std::fclose(file);
+  std::remove(probe.c_str());
+  return true;
+}
+} // namespace
+
+void Player::write_character_files(unsigned mask) const {
+  if (!pack_.has_character_files())
+    return;
+  const bool flat = !ensure_character_directory(pack_.directory());
+  std::vector<uint8_t> blob;
+  for (size_t index = 0; index < character_file_count; ++index) {
+    if (!(mask & (1U << index)))
+      continue;
+    if (character_file_exists(index))
+      continue;
+    if (!pack_.read_character_file(index, blob))
+      continue;
+    char name[512];
+    character_path(name, sizeof(name), pack_.directory(), index, flat);
+    FILE* file = std::fopen(name, "wb");
+    if (!file && !flat) {
+      character_path(name, sizeof(name), pack_.directory(), index, true);
+      file = std::fopen(name, "wb");
+    }
+    if (!file)
+      continue;
+    std::fwrite(blob.data(), 1, blob.size(), file);
+    std::fclose(file);
+  }
+}
+
+void Player::delete_character_file(size_t index) const {
+  if (index >= character_file_count)
+    return;
+  char name[512];
+  for (const bool flat : {false, true}) {
+    character_path(name, sizeof(name), pack_.directory(), index, flat);
+    std::remove(name);
+  }
+}
+
+bool Player::character_file_exists(size_t index) const {
+  if (index >= character_file_count)
+    return false;
+  char name[512];
+  for (const bool flat : {false, true}) {
+    character_path(name, sizeof(name), pack_.directory(), index, flat);
+    FILE* file = std::fopen(name, "rb");
+    if (file) {
+      std::fclose(file);
+      return true;
+    }
+  }
+  return false;
 }
 
 void Player::load_save_index() {
@@ -308,6 +429,10 @@ void Player::start_new_game() {
     cursor_++;
   if (cursor_ < pack_.events().size())
     cursor_++;
+  if (pack_.start_event() && pack_.start_event() < pack_.events().size())
+    cursor_ = pack_.start_event();
+  effect_kind_ = 0;
+  effect_left_ = effect_elapsed_ = 0;
   title_active_ = video_active_ = false;
   advance_automatic();
   particle_accumulator_ = 0;
@@ -410,6 +535,12 @@ bool Player::restore_to(size_t target, int save_slot) {
     cursor_++;
   if (cursor_ < pack_.events().size())
     cursor_++;
+  // Act 1 saves sit before the Act dispatch block and replay from the
+  // original first event; later acts replay through the dispatch, which the
+  // current persistent playthrough routes the same way it did when saving.
+  if (pack_.start_event() && pack_.start_event() < pack_.events().size() &&
+      target >= pack_.start_event())
+    cursor_ = pack_.start_event();
   replaying_ = true;
   size_t replay_budget = pack_.events().size() * 4;
   while (cursor_ != target) {
